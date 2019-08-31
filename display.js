@@ -8,6 +8,7 @@ function display(firms) {
 			tmpHTML += item + ': ' + firms[firm].inventory[item] + 
 			'<div class="progressbar" style="width:' + firms[firm].inventory[item]/10 + 'px;"></div>';
 		}
+		tmpHTML += 'Efficiency: ' + firms[firm].efficiency + '<br>';
 		tmpHTML += 'Sell Price: ' + firms[firm].sell['price'];
 		tmpHTML += '<hr>';
 	}

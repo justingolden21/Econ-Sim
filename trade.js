@@ -61,6 +61,6 @@ function doTrade(seller, buyer) {
 	buyer.give(seller, 'money', price*amount);
 
 	return amount == sellerMax;
-	// console.log('Trading between ' + seller.type + ' and ' + buyer.type + '. ' +
-	// 	' Amount: ' + amount + ' Resource: ' + resource + ' Price: ' + price);
+	console.log('Trading between ' + seller.type + ' and ' + buyer.type + '. ' +
+		' Amount: ' + amount + ' Resource: ' + resource + ' Price: ' + price);
 }

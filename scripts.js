@@ -4,7 +4,12 @@ window.onload = function() {
 	document.getElementById('pause-btn').onclick = function() {
 		paused = !paused;
 	}
-	document.getElementById('tick-btn').onclick = tick;
+	document.getElementById('tick-btn').onclick = ()=> {
+		let tmp = paused;
+		paused = false;
+		tick();
+		paused = tmp;		
+	};
 }
 
 let paused = false;
@@ -82,11 +87,13 @@ class Mine extends Firm {
 		this.buy = {'resource':'food', 'price': 30};
 
 		this.upkeep = {'resource': 'iron', 'cost': 2, 'interval': 10};
+
+		this.efficiency = random(-2,2);
 	}
 	produce() {
 		if(this.inventory['food'] >= 10) {
 			this.inventory['food'] -= 10;
-			this.inventory['iron'] += random(25,35);
+			this.inventory['iron'] += 30 + this.efficiency + random(-1,1);
 		}
 	}
 }
@@ -101,11 +108,13 @@ class Farm extends Firm {
 		this.buy = {'resource':'iron', 'price': 50};
 
 		this.upkeep = {'resource': 'food', 'cost': 1, 'interval': 15};
+
+		this.efficiency = random(-3,3);
 	}
 	produce() {
 		if(this.inventory['iron'] >= 5) {
 			this.inventory['iron'] -= 5;
-			this.inventory['food'] += random(12,18);
+			this.inventory['food'] += 15 + this.efficiency + random(-1,1);
 		}
 	}
 }
