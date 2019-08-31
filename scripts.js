@@ -27,11 +27,12 @@ document.onkeydown = function(evt) {
 };
 
 class Firm {
-	constructor(startMoney, startFood, startIron, firmNum) {
+	constructor(startMoney, startFood, startIron, startTools, firmNum) {
 		this.inventory = {
 			'money': startMoney,
 			'food': startFood,
-			'iron': startIron
+			'iron': startIron,
+			'tools': startTools
 		};
 		this.firmNum = firmNum;
 
@@ -78,13 +79,13 @@ class Firm {
 
 class Mine extends Firm {
 	constructor(firmNum) {
-		super(300, 50, 20, firmNum);
+		super(300, 50, 20, 40, firmNum);
 		this.type = 'Mine';
 
 		// this.sell = {'resource':'iron', 'price': 40, 'max': 6};
-		this.sell = {'resource':'iron', 'price': 40};
+		this.sell = {'iron': 40};
 		// this.buy = {'resource':'food', 'price': 30, 'max': 2};
-		this.buy = {'resource':'food', 'price': 30};
+		this.buy = {'food': 30};
 
 		this.upkeep = {'resource': 'iron', 'cost': 2, 'interval': 10};
 
@@ -99,13 +100,13 @@ class Mine extends Firm {
 }
 class Farm extends Firm {
 	constructor(firmNum) {
-		super(200, 20, 20, firmNum);
+		super(200, 20, 20, 30, firmNum);
 		this.type = 'Farm';
 
 		// this.sell = {'resource':'food', 'price': 20, 'max': 5};
-		this.sell = {'resource':'food', 'price': 20};
+		this.sell = {'food':20};
 		// this.buy = {'resource':'iron', 'price': 50, 'max': 4};
-		this.buy = {'resource':'iron', 'price': 50};
+		this.buy = {'iron': 50};
 
 		this.upkeep = {'resource': 'food', 'cost': 1, 'interval': 15};
 
@@ -115,6 +116,29 @@ class Farm extends Firm {
 		if(this.inventory['iron'] >= 5) {
 			this.inventory['iron'] -= 5;
 			this.inventory['food'] += 15 + this.efficiency + random(-1,1);
+		}
+	}
+}
+class Smith extends Firm {
+	constructor(firmNum) {
+		super(150, 30, 30, 25, firmNum);
+		this.type = 'Smith';
+
+		this.sell = {'tools': 35};
+		this.buy = [
+		{'food': 30},
+		{'iron': 40}
+		];
+
+		this.upkeep = {'resource': 'tools', 'cost': 1, 'interval': 20};
+
+		this.efficiency = random(-1,1);
+	}
+	produce() {
+		if(this.inventory['food'] >= 10 && this.inventory['iron'] >= 5) {
+			this.inventory['food'] -= 10;
+			this.inventory['iron'] -= 5;
+			this.inventory['tools'] += 15 + this.efficiency + random(-1,1);
 		}
 	}
 }
@@ -128,11 +152,14 @@ function start() {
 }
 
 function newFirm() {
-	if(random(1,5) == 5) {
+	let firmType = random(1,5);
+	if(firmType == 5) {
 		AIs.push(new Mine(AIs.length) );
+	} else if(firmType > 3) {
+		AIs.push(new Smith(AIs.length) );
 	} else {
 		AIs.push(new Farm(AIs.length) );
-	}	
+	}
 }
 
 let ticks = 0;
