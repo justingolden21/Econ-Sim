@@ -43,7 +43,7 @@ class Firm {
 		if(this.bankrupt) return;
 		this.ticks++;
 		this.payUpkeep();
-		this.produce();
+		this.doProduction();
 	}
 	payUpkeep() {
 		if(this.ticks % this.upkeep['interval'] == 0) {
@@ -55,6 +55,19 @@ class Firm {
 				this.bankrupt = true;
 			}
 		}
+	}
+	doProduction() {
+		let canProduce = true;
+		for(let resource in this.produceCost) {
+			if(!this.has(resource, this.produceCost[resource]) ) {
+				canProduce = false;
+			}
+		}
+		if(!canProduce) return;
+		for(let resource in this.produceCost) {
+			this.pay(resource, this.produceCost[resource]);
+		}
+		this.get(Object.keys(this.producedGoods)[0], this.producedGoods[Object.keys(this.producedGoods)[0] ]);
 	}
 	adjust(upwards) {
 		// can edit function so seller prefers to not sell and save resources for later

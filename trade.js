@@ -18,7 +18,7 @@ function doTrades(firms) {
 		let buyers = [];
 		for(let j = 0; j < firms.length; j++) {
 			// if the firm wants to buy the resource, will pay asking price, and has the money
-			for(key in firms[j].buy) {
+			for(let key in firms[j].buy) {
 				if(key == resource) {
 					if(firms[j].buy[key] >= price) {
 						if(firms[j].has('money', price) ) {
