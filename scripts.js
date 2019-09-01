@@ -27,12 +27,12 @@ document.onkeydown = function(evt) {
 };
 
 class Firm {
-	constructor(startMoney, startFood, startIron, startTools, firmNum) {
+	constructor(startInventory, firmNum) {
 		this.inventory = {
-			'money': startMoney,
-			'food': startFood,
-			'iron': startIron,
-			'tools': startTools
+			'money': startInventory.money || 0,
+			'food': startInventory.food || 0,
+			'iron': startInventory.iron || 0,
+			'tools': startInventory.tools || 0
 		};
 		this.firmNum = firmNum;
 
@@ -75,71 +75,11 @@ class Firm {
 	pay(resource, amount) {
 		this.inventory[resource] -= amount;
 	}
-}
-
-class Mine extends Firm {
-	constructor(firmNum) {
-		super(300, 50, 20, 40, firmNum);
-		this.type = 'Mine';
-
-		// this.sell = {'resource':'iron', 'price': 40, 'max': 6};
-		this.sell = {'iron': 40};
-		// this.buy = {'resource':'food', 'price': 30, 'max': 2};
-		this.buy = {'food': 30};
-
-		this.upkeep = {'resource': 'iron', 'cost': 2, 'interval': 10};
-
-		this.efficiency = random(-2,2);
+	get(resource, amount) {
+		this.inventory[resource] += amount;	
 	}
-	produce() {
-		if(this.inventory['food'] >= 10) {
-			this.inventory['food'] -= 10;
-			this.inventory['iron'] += 30 + this.efficiency + random(-1,1);
-		}
-	}
-}
-class Farm extends Firm {
-	constructor(firmNum) {
-		super(200, 20, 20, 30, firmNum);
-		this.type = 'Farm';
-
-		// this.sell = {'resource':'food', 'price': 20, 'max': 5};
-		this.sell = {'food':20};
-		// this.buy = {'resource':'iron', 'price': 50, 'max': 4};
-		this.buy = {'iron': 50};
-
-		this.upkeep = {'resource': 'food', 'cost': 1, 'interval': 15};
-
-		this.efficiency = random(-3,3);
-	}
-	produce() {
-		if(this.inventory['iron'] >= 5) {
-			this.inventory['iron'] -= 5;
-			this.inventory['food'] += 15 + this.efficiency + random(-1,1);
-		}
-	}
-}
-class Smith extends Firm {
-	constructor(firmNum) {
-		super(150, 30, 30, 25, firmNum);
-		this.type = 'Smith';
-
-		this.sell = {'tools': 35};
-		this.buy = [
-		{'food': 30},
-		{'iron': 40}
-		];
-
-		this.upkeep = {'resource': 'tools', 'cost': 1, 'interval': 20};
-
-		this.efficiency = random(-1,1);
-	}
-	produce() {
-		if(this.inventory['food'] >= 10 && this.inventory['iron'] >= 5) {
-			this.inventory['food'] -= 10;
-			this.inventory['iron'] -= 5;
-			this.inventory['tools'] += 15 + this.efficiency + random(-1,1);
-		}
+	type() {
+		return this.constructor.name;
 	}
 }
 
@@ -173,7 +113,6 @@ function tick() {
 	}
 
 	if(ticks%3==0) {
-		// doTrades(AIs);
 		doTrades(AIs.filter(AI => AI.bankrupt==false) );
 	}
 
@@ -195,4 +134,20 @@ function shuffle(a) {
 		a[j] = x;
 	}
 	return a;
+}
+
+// https://stackoverflow.com/questions/25582882/javascript-math-random-normal-distribution-gaussian-bell-curve
+function normalFloat() {
+	let u = 0, v = 0;
+	while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+	while(v === 0) v = Math.random();
+	let num = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+	num = num / 10.0 + 0.5; // Translate to 0 -> 1
+	if (num > 1 || num < 0) return normalFloat(); // resample between 0 and 1
+	return num;
+}
+
+// normal int in range
+function normal(min, max) {
+	return Math.floor(normalFloat() * (max - min + 1) ) + min;
 }

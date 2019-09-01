@@ -1,17 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Econ Sim</title>
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	<script src="scripts.js"></script>
-	<script src="trade.js"></script>
-	<script src="display.js"></script>
+<title>Econ Sim</title>
+
+<meta charset="utf-8">
+<meta name="title=" content="Econ Sim">
+<meta name="robots" content="index, follow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Econ Sim">
+<meta name="keywords" content="Econ Sim">
+<!-- <meta name="theme-color" content="hsl(160, 75%, 30%)"> -->
+<!-- <meta name="msapplication-navbutton-color" content="hsl(160, 75%, 30%)"> -->
+<!-- <meta name="apple-mobile-web-app-status-bar-style" content="hsl(160, 75%, 30%)"> -->
+<!-- <link rel="shortcut icon" href="img/icon.png"> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.8.9/jquery.csv.js"></script> -->
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="styles.css">
+<script src="scripts.js"></script>
+<script src="firms.js"></script>
+<script src="trade.js"></script>
+<script src="display.js"></script>
 </head>
-<body>
+<body class="container">
 
-<button id="pause-btn">Pause</button>
-<button id="tick-btn">Tick</button>
-<div id="display"></div>
-
+<button id="pause-btn" class="btn btn-dark">Pause</button>
+<button id="tick-btn" class="btn btn-dark">Tick</button>
+<span>Esc for pause, T for tick</span>
+<div id="display" class="row"></div>
 </body>
 </html>

@@ -2,7 +2,8 @@ function display(firms) {
 	let tmpHTML = '';
 
 	for(firm in firms) {
-		tmpHTML += 'Firm #' + firms[firm].firmNum + ' - ' + firms[firm].type + ':<br>';
+		tmpHTML += '<div class="col-sm-6 col-md-4">'
+		tmpHTML += 'Firm #' + firms[firm].firmNum + ' - ' + firms[firm].type() + ':<br>';
 		tmpHTML += 'Bankrupt: ' + firms[firm].bankrupt + '<br>';
 		for(item in firms[firm].inventory) {
 			tmpHTML += item + ': ' + firms[firm].inventory[item] + 
@@ -10,7 +11,7 @@ function display(firms) {
 		}
 		tmpHTML += 'Efficiency: ' + firms[firm].efficiency + '<br>';
 		tmpHTML += 'Sell Price: ' + firms[firm].sell[Object.keys(firms[firm].sell)[0] ];
-		tmpHTML += '<hr>';
+		tmpHTML += '</div>';
 	}
 
 	document.getElementById('display').innerHTML = tmpHTML;

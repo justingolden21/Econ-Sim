@@ -18,9 +18,9 @@ function doTrades(firms) {
 		let buyers = [];
 		for(let j = 0; j < firms.length; j++) {
 			// if the firm wants to buy the resource, will pay asking price, and has the money
-			for(let k = 0; k < firms[j].buy.length; k++) {
-				if(Object.keys(firms[j].buy[k])[0] == resource) {
-					if(firms[j].buy[k][resource] >= price) {
+			for(key in firms[j].buy) {
+				if(key == resource) {
+					if(firms[j].buy[key] >= price) {
 						if(firms[j].has('money', price) ) {
 							buyers.push(firms[j]);
 						}
@@ -51,9 +51,6 @@ function doTrades(firms) {
 }
 
 function doTrade(seller, buyer, price, resource) {
-	// let sellerMax = Math.min(seller.inventory[resource], seller.sell['max']);
-	// let buyerMax = Math.min(Math.floor(buyer.inventory['money']/price), buyer.buy['max']);
-
 	let sellerMax = Math.max(seller.inventory[resource] - 2*seller.upkeep['cost'], 0);
 	let buyerMax = Math.floor(buyer.inventory['money']/price);
 	let amount = Math.min(buyerMax, sellerMax);
@@ -61,7 +58,8 @@ function doTrade(seller, buyer, price, resource) {
 	seller.give(buyer, resource, 1*amount);
 	buyer.give(seller, 'money', price*amount);
 
+	// console.log('Trading between ' + seller.type() + ' and ' + buyer.type() + '. ' +
+	// 	' Amount: ' + amount + ' Resource: ' + resource + ' Price: ' + price);
+
 	return amount == sellerMax;
-	console.log('Trading between ' + seller.type + ' and ' + buyer.type + '. ' +
-		' Amount: ' + amount + ' Resource: ' + resource + ' Price: ' + price);
 }
