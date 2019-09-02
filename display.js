@@ -15,4 +15,6 @@ function display(firms) {
 	}
 
 	document.getElementById('display').innerHTML = tmpHTML;
+
+	document.getElementById('ticks').innerHTML = ticks;
 }

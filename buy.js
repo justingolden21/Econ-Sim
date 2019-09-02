@@ -82,7 +82,6 @@ function updateBuyValues(firm, purchaseCosts) {
 	// check to make sure we have money and both resources are available
 	// NOTE: runs infinitely
 	while(availableMoney >= spentMoney && input1Idx < input1purchaseCosts.length && input2Idx < input2purchaseCosts.length) {
-		console.log(input1Idx);
 		let input1purchaseCost = input1purchaseCosts[input1Idx][0];
 		let input2purchaseCost = input2purchaseCosts[input2Idx][0];
 		// checks if at current (lowest) price point, it's worth producing
