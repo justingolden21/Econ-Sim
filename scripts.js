@@ -100,7 +100,7 @@ class Firm {
 let AIs = [];
 let currentFirmNum = 0;
 function start() {
-	for(let i=0; i<25; i++) {
+	for(let i=0; i<20; i++) {
 		newFirm();
 	}
 	display(AIs);
@@ -129,8 +129,7 @@ function tick() {
 	}
 
 	if(ticks%3==0) {
-		doTradesNew(AIs.filter(AI => AI.bankrupt==false) );
-		// doTrades(AIs.filter(AI => AI.bankrupt==false) );
+		doTrades(AIs.filter(AI => AI.bankrupt==false) );
 		for(let i=0; i<AIs.length; i++) {
 			AIs[i].adjust();
 		}

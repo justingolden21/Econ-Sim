@@ -3,7 +3,7 @@ sort sellers by resource sold, from cheapest to most expensive
 randomize order of buyers, then each one goes and updates its buy info, then buys that many
 */
 
-function doTradesNew(firms) {
+function doTrades(firms) {
 	// create purchase costs object
 
 	let purchaseCosts = {};
