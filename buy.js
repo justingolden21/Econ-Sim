@@ -6,11 +6,12 @@ function updateBuyValues(firm, purchaseCosts) {
 	let availableMoney = firm.inventory['money'];
 	let spentMoney = 0;
 	let doingUpkeep = false;
+	let upkeepResource, upkeepResourceToBuy;
 
 	// buy for upkeep cost first
 	if(firm.ticks % firm.upkeep['interval'] == 0) {
 		doingUpkeep = true;
-		let upkeepResource = firm.upkeep['resource'];
+		upkeepResource = firm.upkeep['resource'];
 		let upkeepCost = firm.upkeep['cost'];
 		
 		let upkeepResourcePurchaseCosts = purchaseCosts[upkeepResource];
@@ -21,7 +22,7 @@ function updateBuyValues(firm, purchaseCosts) {
 
 			let upkeepResourceIdx = 0;
 
-			let upkeepResourceToBuy = 0;
+			upkeepResourceToBuy = 0;
 
 			while(upkeepResourceIdx < upkeepResourcePurchaseCosts.length && upkeepResourceToBuy < upkeepCost) {
 				let upkeepResourcePurchaseCost = upkeepResourcePurchaseCosts[upkeepResourceIdx][0];
@@ -123,7 +124,10 @@ function updateBuyValues(firm, purchaseCosts) {
 
 				input1available -= input1optimalPurchase;
 				input2available -= input2optimalPurchase;
+
+				availableMoney = 0; // testing
 			}
+			input1Idx++; // testing
 		} else if(input1available/input1produceCost > input2available/input2produceCost) {
 			// input2 is limiting
 			
@@ -154,7 +158,10 @@ function updateBuyValues(firm, purchaseCosts) {
 
 				input2available -= input2optimalPurchase;
 				input1available -= input1optimalPurchase;
+
+				availableMoney = 0; // testing
 			}
+			input2Idx++; // testing
 		} else {
 			// perfect ratio
 			
@@ -184,7 +191,11 @@ function updateBuyValues(firm, purchaseCosts) {
 
 				input1available -= input1optimalPurchase;
 				input2available -= input2optimalPurchase;
+
+				availableMoney = 0; // testing
 			}
+			input1Idx++; // testing
+			input2Idx++; // testing
 		}
 
 		// increment indicies to get to next price point(s)
