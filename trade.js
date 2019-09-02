@@ -41,7 +41,7 @@ function doTrades(firms) {
 	for(let i = 0; i < buyerIdxs.length; i++) {
 		let buyer = firms[buyerIdxs[i] ];
 		// let the firm update their buy info first
-		updateBuyValues(buyer, purchaseCosts);
+		// updateBuyValues(buyer, purchaseCosts); // note: is infinite need to fix
 		for(resource in buyer.buy) {
 			let amountToBuy = buyer.buy[resource];
 			let resourceCosts = purchaseCosts[resource];
