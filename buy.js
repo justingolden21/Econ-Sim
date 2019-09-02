@@ -65,7 +65,7 @@ function updateBuyValues(firm, purchaseCosts) {
 	let input2purchaseCosts = purchaseCosts[input2];
 
 	if(!purchaseCosts[input1] || !purchaseCosts[input2]) {
-		firm.buy = {input1: 0, input2: 0};
+		firm.buy = {[input1]: 0, [input2]: 0};
 		return;
 	}
 
@@ -86,8 +86,7 @@ function updateBuyValues(firm, purchaseCosts) {
 		let input2purchaseCost = input2purchaseCosts[input2Idx][0];
 		// checks if at current (lowest) price point, it's worth producing
 		if(input1purchaseCost * input1produceCost + input1purchaseCost * input2produceCost > outputPrice * outputProduced) {
-			firm.buy = {input1: input1toBuy, input2: input2toBuy};
-			return;
+			break; // combine with upkeep and finish function
 		}
 
 		let input1available = input1purchaseCosts[input1Idx][1];
@@ -204,19 +203,19 @@ function updateBuyValues(firm, purchaseCosts) {
 		if(input2available == 0) {
 			input2Idx++;
 		}		
-	}
+	} // end while
 
 
 	// last stuff combining upkeep resource if relevant
 	if(doingUpkeep) {
 		if(upkeepResource==input1) {
-			firm.buy = {input1: input1toBuy+upkeepResourceToBuy, input2: input2toBuy};
+			firm.buy = {[input1]: input1toBuy+upkeepResourceToBuy, [input2]: input2toBuy};
 			return;
 		} else if(upkeepResource==input2) {
-			firm.buy = {input1: input1toBuy, input2: input2toBuy+upkeepResourceToBuy};
+			firm.buy = {[input1]: input1toBuy, [input2]: input2toBuy+upkeepResourceToBuy};
 			return;
 		} else {
-			firm.buy = {input1: input1toBuy, input2: input2toBuy, upkeepResource: upkeepResourceToBuy};
+			firm.buy = {[input1]: input1toBuy, [input2]: input2toBuy, [upkeepResource]: upkeepResourceToBuy};
 			return;
 		}
 	}
