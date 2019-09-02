@@ -1,7 +1,7 @@
 // ignore initial inventory because we will run optimally
 // take into account amount of inputs available (and starting values)
 // take into account multiple different prices and amounts available
-function getAmountToBuyAdvanced(firm) {
+function getAmountToBuy(firm) {
 
 	let availableMoney = firm.inventory['money'];
 	let spentMoney = 0;

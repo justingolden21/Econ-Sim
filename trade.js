@@ -1,3 +1,69 @@
+/* TODO:
+sort sellers by resource sold, from cheapest to most expensive
+randomize order of buyers, then each one goes and updates its buy info, then buys that many
+*/
+
+function doTradesNew(firms) {
+
+	let purchaseCosts = {};
+	for(firm in firms) {
+		let resource = Object.keys(firms[firm].sell)[0];
+		if(firms[firm].has(resource, 1) ) { // has resource it's selling
+			// add to purchaseCosts
+			if(purchaseCosts[resource]==undefined) {
+				purchaseCosts[resource] = [];
+			}
+			// each resource is a key and the value is a sorted (will sort later)
+			// list of the resource's cost, amount available, and firm number
+			purchaseCosts[resource].push(
+				[firms[firm].sell[resource], // resource cost (will sort by this)
+				firms[firm].inventory[resource], // amount available
+				firms[firm].firmNum] // firm number
+			);
+		}
+	}
+
+	for(resource in purchaseCosts) {
+		// sort each resource in obj by its cost
+		purchaseCosts[resource].sort( (a,b)=> {
+			// cost is element at idx 0
+			return a[0]-b[0];
+		});
+	}
+
+	console.log(purchaseCosts);
+
+
+
+	// sort sell orders
+	let sellOrders = [];
+	for(firm in firms) {
+		let resource = Object.keys(firms[firm].sell)[0];
+		if(firms[firm].has(resource, 1) ) {
+			// must have 1 of resource they're selling
+			sellOrders.push({'sell': firms[firm].sell, 'firm': firms[firm].firmNum});
+		}
+	}
+	// sort array of objects
+	sellOrders.sort( (a,b)=> { // sort by keys
+		let textA = Object.keys(a['sell'])[0];
+		let textB = Object.keys(b['sell'])[0];
+		return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+	});
+	sellOrders.sort( (a,b)=> { // sort by vals
+		let valA = Object.values(a['sell'])[0];
+		let valB = Object.values(b['sell'])[0];
+		return valA - valB;
+	});
+	console.log(sellOrders);
+
+	// get rid of sell orders later?
+
+
+
+
+}
+
 function doTrades(firms) {
 	let sellers = firms;
 

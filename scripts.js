@@ -71,12 +71,13 @@ class Firm {
 	}
 	adjust(upwards) {
 		// can edit function so seller prefers to not sell and save resources for later
+		let sellResource = Object.keys(this.sell)[0];
 		if(upwards) {
-			this.sell['price'] += random(1,2);//why does this need to be ranomd?
+			this.sell[sellResource] += random(1,2);
 		} else {
-			this.sell['price'] -= random(1,2);//just have it adjust by one
+			this.sell[sellResource] -= random(1,2);
 		}
-		this.sell['price'] = Math.max(1, this.sell['price']);
+		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
 	}
 	give(firm, resource, amount) {
 		firm.inventory[resource] += amount;
@@ -98,7 +99,7 @@ class Firm {
 
 let AIs = [];
 function start() {
-	for(let i=0; i<20; i++) {
+	for(let i=0; i<25; i++) {
 		newFirm();
 	}
 	display(AIs);
@@ -126,7 +127,8 @@ function tick() {
 	}
 
 	if(ticks%3==0) {
-		doTrades(AIs.filter(AI => AI.bankrupt==false) );
+		doTradesNew(AIs.filter(AI => AI.bankrupt==false) );
+		// doTrades(AIs.filter(AI => AI.bankrupt==false) );
 	}
 
 	display(AIs);
