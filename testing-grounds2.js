@@ -1,7 +1,7 @@
 // ignore initial inventory because we will run optimally
 // take into account amount of inputs available (and starting values)
 // take into account multiple different prices and amounts available
-function getAmountToBuy(firm) {
+function updateBuyValues(firm, purchaseCosts) {
 
 	let availableMoney = firm.inventory['money'];
 	let spentMoney = 0;
@@ -13,31 +13,36 @@ function getAmountToBuy(firm) {
 		let upkeepResource = firm.upkeep['resource'];
 		let upkeepCost = firm.upkeep['cost'];
 		
-		let upkeepResourcePurchaseCosts = getPurchaseCosts(upkeepResource);
+		let upkeepResourcePurchaseCosts = purchaseCosts[upkeepResource];
+		if(!purchaseCosts[upkeepResource]) {
+			upkeepResourceToBuy = 0;
+		}
+		else {
 
-		let upkeepResourceIdx = 0;
+			let upkeepResourceIdx = 0;
 
-		let upkeepResourceToBuy = 0;
+			let upkeepResourceToBuy = 0;
 
-		while(upkeepResourceIdx < upkeepResourcePurchaseCosts.length && upkeepResourceToBuy < upkeepCost) {
-			let upkeepResourcePurchaseCost = upkeepResourcePurchaseCosts[upkeepResourceIdx][0];
-			let upkeepResourceAvailable = upkeepResourcePurchaseCosts[upkeepResourceIdx][1];
+			while(upkeepResourceIdx < upkeepResourcePurchaseCosts.length && upkeepResourceToBuy < upkeepCost) {
+				let upkeepResourcePurchaseCost = upkeepResourcePurchaseCosts[upkeepResourceIdx][0];
+				let upkeepResourceAvailable = upkeepResourcePurchaseCosts[upkeepResourceIdx][1];
 
-			if(upkeepCost - upkeepResourceToBuy > upkeepResourceAvailable) {
-				// buy all (remaining available)
-				upkeepResourceToBuy += upkeepResourceAvailable;
-			} else {
-				// buy necessary (remaining necessary)
-				upkeepResourceToBuy += upkeepCost - upkeepResourceToBuy;
-			}
+				if(upkeepCost - upkeepResourceToBuy > upkeepResourceAvailable) {
+					// buy all (remaining available)
+					upkeepResourceToBuy += upkeepResourceAvailable;
+				} else {
+					// buy necessary (remaining necessary)
+					upkeepResourceToBuy += upkeepCost - upkeepResourceToBuy;
+				}
 
-			let moneyToSpend = upkeepResourcePurchaseCost * upkeepResourceToBuy;
-			spentMoney += moneyToSpend;
-			availableMoney -= moneyToSpend;
-			upkeepResourceAvailable -=upkeepResourceToBuy;
+				let moneyToSpend = upkeepResourcePurchaseCost * upkeepResourceToBuy;
+				spentMoney += moneyToSpend;
+				availableMoney -= moneyToSpend;
+				upkeepResourceAvailable -=upkeepResourceToBuy;
 
-			if(upkeepResourceAvailable == 0) {
-				upkeepResourceIdx++;
+				if(upkeepResourceAvailable == 0) {
+					upkeepResourceIdx++;
+				}
 			}
 		}
 
@@ -55,10 +60,13 @@ function getAmountToBuy(firm) {
 	let input1produceCost = firm.produceCost[input1];
 	let input2produceCost = firm.produceCost[input2];
 
-	let input1purchaseCosts = getPurchaseCosts(input1);
-	let input2purchaseCosts = getPurchaseCosts(input2);
+	let input1purchaseCosts = purchaseCosts[input1];
+	let input2purchaseCosts = purchaseCosts[input2];
 
-
+	if(!purchaseCosts[input1] || !purchaseCosts[input2]) {
+		firm.buy = {input1: 0, input2: 0};
+		return;
+	}
 
 	let output = Object.keys(firm.sell)[0];
 	let outputPrice = firm.sell[output];
@@ -76,7 +84,8 @@ function getAmountToBuy(firm) {
 		let input2purchaseCost = input2purchaseCosts[input2Idx][0];
 		// checks if at current (lowest) price point, it's worth producing
 		if(input1purchaseCost * input1produceCost + input1purchaseCost * input2produceCost > outputPrice * outputProduced) {
-			return {input1: input1toBuy, input2: input2toBuy};
+			firm.buy = {input1: input1toBuy, input2: input2toBuy};
+			return;
 		}
 
 		let input1available = input1purchaseCosts[input1Idx][1];
@@ -188,35 +197,19 @@ function getAmountToBuy(firm) {
 
 	// last stuff combining upkeep resource if relevant
 	if(doingUpkeep) {
-	if(upkeepResource==input1) {
-		return {input1: input1toBuy+upkeepResourceToBuy, input2: input2toBuy};
-	} else if(upkeepResource==input2) {
-		return {input1: input1toBuy, input2: input2toBuy+upkeepResourceToBuy};		
-	} else {
-		return {input1: input1toBuy, input2: input2toBuy, upkeepResource: upkeepResourceToBuy};
+		if(upkeepResource==input1) {
+			firm.buy = {input1: input1toBuy+upkeepResourceToBuy, input2: input2toBuy};
+			return;
+		} else if(upkeepResource==input2) {
+			firm.buy = {input1: input1toBuy, input2: input2toBuy+upkeepResourceToBuy};
+			return;
+		} else {
+			firm.buy = {input1: input1toBuy, input2: input2toBuy, upkeepResource: upkeepResourceToBuy};
+			return;
+		}
 	}
-	
 
 	// todo idea: edit amount available for future calls, so we don't have to calculate it each time we request it
 	// we only have to calc it at start of trade sequence
 	// basically, when we buy, update amount available
-}
-
-function isWorthProducing(firm) {
-	let input1 = Object.keys(firm.produceCost)[0];
-	let input2 = Object.keys(firm.produceCost)[1];
-
-	let input1produceCost = firm.produceCost[input1];
-	let input2produceCost = firm.produceCost[input2];
-
-	let input1purchaseCost = getPurchaseCost(input1);
-	let input2purchaseCost = getPurchaseCost(input2);
-
-	let output = Object.keys(firm.sell)[0];
-	let outputPrice = firm.sell[output];
-	let outputProduced = firm.producedGoods[output];
-
-	return outputProduced * outputPrice >
-		(input1produceCost * input1purchaseCost) +
-		(input2produceCost * input2purchaseCost);
 }

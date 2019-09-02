@@ -69,10 +69,10 @@ class Firm {
 		}
 		this.get(Object.keys(this.producedGoods)[0], this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]) );
 	}
-	adjust(upwards) {
+	adjust() {
 		// can edit function so seller prefers to not sell and save resources for later
 		let sellResource = Object.keys(this.sell)[0];
-		if(upwards) {
+		if(this.sell[sellResource]==0) { // if it ran out
 			this.sell[sellResource] += random(1,2);
 		} else {
 			this.sell[sellResource] -= random(1,2);
@@ -98,6 +98,7 @@ class Firm {
 }
 
 let AIs = [];
+let currentFirmNum = 0;
 function start() {
 	for(let i=0; i<25; i++) {
 		newFirm();
@@ -108,12 +109,13 @@ function start() {
 function newFirm() {
 	let firmType = random(1,5);//in the expand function, we will call this with the parent's firm type
 	if(firmType == 5) {
-		AIs.push(new Mine(AIs.length) );
+		AIs[currentFirmNum] = new Mine(currentFirmNum);
 	} else if(firmType > 3) {
-		AIs.push(new Smith(AIs.length) );
+		AIs[currentFirmNum] = new Smith(currentFirmNum);
 	} else {
-		AIs.push(new Farm(AIs.length) );
+		AIs[currentFirmNum] = new Farm(currentFirmNum);
 	}
+	currentFirmNum++;
 }
 
 let ticks = 0;
@@ -129,6 +131,9 @@ function tick() {
 	if(ticks%3==0) {
 		doTradesNew(AIs.filter(AI => AI.bankrupt==false) );
 		// doTrades(AIs.filter(AI => AI.bankrupt==false) );
+		for(let i=0; i<AIs.length; i++) {
+			AIs[i].adjust();
+		}
 	}
 
 	display(AIs);
