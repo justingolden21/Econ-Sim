@@ -29,9 +29,9 @@ document.onkeydown = function(evt) {
 class Firm {
 	constructor(startInventory, firmNum) {
 		this.inventory = {
-			'money': startInventory.money || 0,
-			'food': startInventory.food || 0,
-			'iron': startInventory.iron || 0,
+			'money': startInventory.money || 0,//change to drachma
+			'food': startInventory.food || 0,//change to bread
+			'iron': startInventory.iron || 0,//change to metal
 			'tools': startInventory.tools || 0
 		};
 		this.firmNum = firmNum;
@@ -67,14 +67,14 @@ class Firm {
 		for(let resource in this.produceCost) {
 			this.pay(resource, this.produceCost[resource]);
 		}
-		this.get(Object.keys(this.producedGoods)[0], this.producedGoods[Object.keys(this.producedGoods)[0] ]);
+		this.get(Object.keys(this.producedGoods)[0], this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]) );
 	}
 	adjust(upwards) {
 		// can edit function so seller prefers to not sell and save resources for later
 		if(upwards) {
-			this.sell['price'] += random(1,2);
+			this.sell['price'] += random(1,2);//why does this need to be ranomd?
 		} else {
-			this.sell['price'] -= random(1,2);
+			this.sell['price'] -= random(1,2);//just have it adjust by one
 		}
 		this.sell['price'] = Math.max(1, this.sell['price']);
 	}
@@ -105,7 +105,7 @@ function start() {
 }
 
 function newFirm() {
-	let firmType = random(1,5);
+	let firmType = random(1,5);//in the expand function, we will call this with the parent's firm type
 	if(firmType == 5) {
 		AIs.push(new Mine(AIs.length) );
 	} else if(firmType > 3) {
