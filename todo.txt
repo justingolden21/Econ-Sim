@@ -2,3 +2,8 @@ todo and ideas:
 logic for firm deciding when to not buy?
 firm buying chooses lowest sell price?
 resources decay or go away over time? food?
+
+
+ideas for debugging:
+prices go to 1 so they dont deem it worth it to buy
+they cant pay upkeep cost because they sell it all

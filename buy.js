@@ -4,7 +4,7 @@
 function updateBuyValues(firm, purchaseCosts) {
 
 	let availableMoney = firm.inventory['money'];
-	let spentMoney = 0;
+	// let spentMoney = 0;
 	let doingUpkeep = false;
 	let upkeepResource, upkeepResourceToBuy;
 
@@ -37,7 +37,7 @@ function updateBuyValues(firm, purchaseCosts) {
 				}
 
 				let moneyToSpend = upkeepResourcePurchaseCost * upkeepResourceToBuy;
-				spentMoney += moneyToSpend;
+				// spentMoney += moneyToSpend;
 				availableMoney -= moneyToSpend;
 				upkeepResourceAvailable -=upkeepResourceToBuy;
 
@@ -80,17 +80,19 @@ function updateBuyValues(firm, purchaseCosts) {
 	let input2toBuy = 0;
 
 	// check to make sure we have money and both resources are available
-	// NOTE: runs infinitely
-	while(availableMoney >= spentMoney && input1Idx < input1purchaseCosts.length && input2Idx < input2purchaseCosts.length) {
+	while(availableMoney >= 0 && input1Idx < input1purchaseCosts.length && input2Idx < input2purchaseCosts.length) {
 		let input1purchaseCost = input1purchaseCosts[input1Idx][0];
 		let input2purchaseCost = input2purchaseCosts[input2Idx][0];
 		// checks if at current (lowest) price point, it's worth producing
 		if(input1purchaseCost * input1produceCost + input1purchaseCost * input2produceCost > outputPrice * outputProduced) {
+			// console.log('not worth it');
 			break; // combine with upkeep and finish function
 		}
+		// console.log('worth it');
 
 		let input1available = input1purchaseCosts[input1Idx][1];
 		let input2available = input2purchaseCosts[input2Idx][1];
+
 		// check which resource limits amount we can produce (at current price points)
 		if(input1available/input1produceCost < input2available/input2produceCost) {
 			// input1 is limiting
@@ -100,7 +102,7 @@ function updateBuyValues(firm, purchaseCosts) {
 			if(input1produceCost * input1purchaseCost * input1available +
 				input2produceCost * input2purchaseCost * input2optimalPurchase < availableMoney) {
 				let moneyToSpend = input1purchaseCost * input1available + input2purchaseCost * input2optimalPurchase;
-				spentMoney += moneyToSpend;
+				// spentMoney += moneyToSpend;
 				availableMoney -= moneyToSpend;
 				input1toBuy += input1available;
 				input2toBuy += input2optimalPurchase;
@@ -115,7 +117,7 @@ function updateBuyValues(firm, purchaseCosts) {
 
 				let input1optimalPurchase = input2optimalPurchase * input1produceCost / input2produceCost;
 				let moneyToSpend = input1purchaseCost * input1optimalPurchase + input2purchaseCost * input2optimalPurchase;
-				spentMoney += moneyToSpend;
+				// spentMoney += moneyToSpend;
 				availableMoney -= moneyToSpend;
 				input1toBuy += input1optimalPurchase;
 				input2toBuy += input2optimalPurchase;
@@ -134,7 +136,7 @@ function updateBuyValues(firm, purchaseCosts) {
 			if(input2produceCost * input2purchaseCost * input2available +
 				input1produceCost * input1purchaseCost * input1optimalPurchase < availableMoney) {
 				let moneyToSpend = input2purchaseCost * input2available + input1purchaseCost * input1optimalPurchase;
-				spentMoney += moneyToSpend;
+				// spentMoney += moneyToSpend;
 				availableMoney -= moneyToSpend;
 				input2toBuy += input2available;
 				input1toBuy += input1optimalPurchase;
@@ -149,7 +151,7 @@ function updateBuyValues(firm, purchaseCosts) {
 				
 				let input2optimalPurchase = input1optimalPurchase * input2produceCost / input1produceCost;
 				let moneyToSpend = input2purchaseCost * input2optimalPurchase + input1purchaseCost * input1optimalPurchase;
-				spentMoney += moneyToSpend;
+				// spentMoney += moneyToSpend;
 				availableMoney -= moneyToSpend;
 				input2toBuy += input2optimalPurchase;
 				input1toBuy += input1optimalPurchase;
@@ -167,7 +169,7 @@ function updateBuyValues(firm, purchaseCosts) {
 			if(input1produceCost * input1purchaseCost * input1available +
 				input2produceCost * input2purchaseCost * input2available < availableMoney) {
 				let moneyToSpend = input1purchaseCost * input1available + input2purchaseCost * input2available;
-				spentMoney += moneyToSpend;
+				// spentMoney += moneyToSpend;
 				availableMoney -= moneyToSpend;
 				input1toBuy += input1available;
 				input2toBuy += input2available;
@@ -182,7 +184,7 @@ function updateBuyValues(firm, purchaseCosts) {
 
 				let input1optimalPurchase = input2optimalPurchase * input1produceCost / input2produceCost;
 				let moneyToSpend = input1purchaseCost * input1optimalPurchase + input2purchaseCost * input2optimalPurchase;
-				spentMoney += moneyToSpend;
+				// spentMoney += moneyToSpend;
 				availableMoney -= moneyToSpend;
 				input1toBuy += input1optimalPurchase;
 				input2toBuy += input2optimalPurchase;
@@ -205,9 +207,13 @@ function updateBuyValues(firm, purchaseCosts) {
 		}		
 	} // end while
 
+	input1toBuy = Math.round(input1toBuy);
+	input2toBuy = Math.round(input2toBuy);
 
 	// last stuff combining upkeep resource if relevant
 	if(doingUpkeep) {
+		upkeepResourceToBuy = Math.round(upkeepResourceToBuy);
+
 		if(upkeepResource==input1) {
 			firm.buy = {[input1]: input1toBuy+upkeepResourceToBuy, [input2]: input2toBuy};
 			return;
@@ -219,6 +225,8 @@ function updateBuyValues(firm, purchaseCosts) {
 			return;
 		}
 	}
+	firm.buy = {[input1]: input1toBuy, [input2]: input2toBuy};
+	return;
 
 	// todo idea: edit amount available for future calls, so we don't have to calculate it each time we request it
 	// we only have to calc it at start of trade sequence

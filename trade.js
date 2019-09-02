@@ -41,41 +41,55 @@ function doTrades(firms) {
 	for(let i = 0; i < buyerIdxs.length; i++) {
 		let buyer = firms[buyerIdxs[i] ];
 		// let the firm update their buy info first
-		updateBuyValues(buyer, purchaseCosts); // note: is infinite need to fix
+		// updateBuyValues(buyer, purchaseCosts); // need to add back
 		for(resource in buyer.buy) {
-			let amountToBuy = buyer.buy[resource];
 			let resourceCosts = purchaseCosts[resource];
+			let tmp = buyer.buy[resource]; // store val. won't need when buy.js works
 			for(saleItem in resourceCosts) {
+				// check break conditon
+				if(buyer.buy[resource]==0) {
+					break;
+				}
 				// get vals
 				let sellerNum = resourceCosts[saleItem][2]; // firm num
 				let seller = AIs[sellerNum];
-				let amount = Math.min(buyer.buy[resource], seller.sell[resource]);
+				let amount = Math.min(buyer.buy[resource], seller.inventory[resource]);
+				// console.log(amount);
+				if(amount==0) {
+					break;
+				}
 				// do stuff
 				doTrade(seller, buyer, seller.sell[resource], resource, amount);
 				// update stuff
 				buyer.buy[resource] -= amount;
 				purchaseCosts[resource][saleItem][1] -= amount; // amount is idx 1
-				if(amount = buyer.buy[resource])
-				// check break conditon
-				if(buyer.buy[resource]==0) {
-					break;
-				}
 			}
+			buyer.buy[resource] = tmp; // set it back. won't need when buy.js works
 		}
 	}
 }
 
 // double check if they have the money and resource
 // return if successful transaction
+// function not being called correctly... sometimes fails
 function doTrade(seller, buyer, price, resource, amount) {
-	if(!seller.has(resource, amount) || buyer.has('money', amount) ) {
+	if(amount<1) {
+		console.log(amount);
+	}
+	if(amount==0) return;
+	// console.log(seller, buyer, price, resource, amount);
+	if(!seller.has(resource, amount) || !buyer.has('money', price*amount) ) {
+		// console.log('oh no');
 		return false;
 	}
 
-	seller.give(buyer, resource, 1*amount);
+	seller.give(buyer, resource, amount);
 	buyer.give(seller, 'money', price*amount);
+
+	seller.prevAmountSold += amount;
 
 	// console.log('Trading between ' + seller.type() + ' and ' + buyer.type() + '. ' +
 	// 	' Amount: ' + amount + ' Resource: ' + resource + ' Price: ' + price);
+	// console.log('yeah');
 	return true;
 }

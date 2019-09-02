@@ -38,9 +38,13 @@ class Firm {
 
 		this.ticks = 0;
 		this.bankrupt = false;
+
+		this.prevAmountProduced = 0;
+		this.prevAmountSold = 0;
 	}
 	tick() {
 		if(this.bankrupt) return;
+		this.prevAmountSold = 0;
 		this.ticks++;
 		this.payUpkeep();
 		this.doProduction();
@@ -67,15 +71,20 @@ class Firm {
 		for(let resource in this.produceCost) {
 			this.pay(resource, this.produceCost[resource]);
 		}
-		this.get(Object.keys(this.producedGoods)[0], this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]) );
+		let amountProduced = this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]);
+		this.get(Object.keys(this.producedGoods)[0], amountProduced);
+		this.prevAmountProduced = amountProduced;
 	}
 	adjust() {
 		// can edit function so seller prefers to not sell and save resources for later
 		let sellResource = Object.keys(this.sell)[0];
-		if(this.sell[sellResource]==0) { // if it ran out
-			this.sell[sellResource] += random(1,2);
-		} else {
+		// console.log(this.inventory[sellResource] );
+		// if(this.inventory[sellResource]==0) { // if it ran out
+		// if(this.inventory[sellResource]<50) { // if it doesn't have much
+		if(this.prevAmountProduced > this.prevAmountSold) { // produced more than sold
 			this.sell[sellResource] -= random(1,2);
+		} else {
+			this.sell[sellResource] += random(1,2);
 		}
 		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
 	}
@@ -100,7 +109,7 @@ class Firm {
 let AIs = [];
 let currentFirmNum = 0;
 function start() {
-	for(let i=0; i<25; i++) {
+	for(let i=0; i<45; i++) {
 		newFirm();
 	}
 	display(AIs);
@@ -130,9 +139,9 @@ function tick() {
 
 	if(ticks%3==0) {
 		doTrades(AIs.filter(AI => AI.bankrupt==false) );
-		// for(let i=0; i<AIs.length; i++) {
-		// 	AIs[i].adjust();
-		// }
+		for(let i=0; i<AIs.length; i++) {
+			AIs[i].adjust();
+		}
 	}
 
 	display(AIs);
