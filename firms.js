@@ -6,14 +6,14 @@ class Mine extends Firm {
 	constructor(firmNum) {
 		super({'money':300, 'food':50, 'iron':20, 'tools':40}, firmNum);//starting inventory
 
-		this.sell = {'iron': 40};//what it is selling, one item for now
-		this.buy = {'food': 30}; //what it is buying, can be mutliple
+		this.sell = {'iron': 40}; //sell prices per resource
+		this.buy = {'food': 30}; //what it is buying and how much
 
 		this.upkeep = {'resource': 'iron', 'cost': 2, 'interval': 10};//it's upkeep fixed costs
 		this.efficiency = normal(-2,2);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'food': 20, 'tools': 2};//what it takes for this firm to produce
-		this.producedGoods = {'iron': 30};//what this firm is producing
+		this.producedGoods = {'iron': 50};//what this firm is producing
 		//this.expandRequire
 		//this.expandCost
 
@@ -34,7 +34,7 @@ class Farm extends Firm {
 		this.efficiency = normal(-3,3);
 
 		this.produceCost = {'tools': 10, 'iron': 2};
-		this.producedGoods = {'food': 15};
+		this.producedGoods = {'food': 20};
 
 		this.variance = [-2,2];
 
@@ -53,7 +53,7 @@ class Smith extends Firm {
 		this.efficiency = normal(-1,1);
 
 		this.produceCost = {'food': 20, 'iron': 10};
-		this.producedGoods = {'tools': 25};
+		this.producedGoods = {'tools': 40};
 
 		this.variance = [-2,2];
 

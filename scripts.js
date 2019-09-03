@@ -1,6 +1,6 @@
 window.onload = function() {
 	start();
-	window.setInterval(tick, 100);
+	window.setInterval(tick, 1000);
 	document.getElementById('pause-btn').onclick = function() {
 		paused = !paused;
 	}
@@ -29,11 +29,35 @@ document.onkeydown = function(evt) {
 class Firm {
 	constructor(startInventory, firmNum) {
 		this.inventory = {
-			'money': startInventory.money || 0,//change to drachma
-			'food': startInventory.food || 0,//change to bread
-			'iron': startInventory.iron || 0,//change to metal
+			'money': startInventory.money || 0,
+			'bread': startInventory.bread || 0,
+			'ore': startInventory.ore || 0,
+			'lumber': startInventory.lumber || 0,
+			'metal': startInventory.metal || 0,
+			'wheat': startInventory.wheat || 0,
 			'tools': startInventory.tools || 0
 		};
+		this.reserve = {
+			'money': 0,
+			'bread': 0,
+			'ore': 0,
+			'lumber': 0,
+			'metal': 0,
+			'wheat': 0,
+			'tools': 0
+		};
+		// this.inventory = {
+		// 	'money': startInventory.money || 0,//change to drachma
+		// 	'food': startInventory.food || 0,//change to bread
+		// 	'iron': startInventory.iron || 0,//change to metal
+		// 	'tools': startInventory.tools || 0
+		// };
+		// this.reserve = {
+		// 	'money': 0,
+		// 	'food': 0,
+		// 	'iron': 0,
+		// 	'tools': 0
+		// };
 		this.firmNum = firmNum;
 
 		this.ticks = 0;
@@ -46,18 +70,26 @@ class Firm {
 		if(this.bankrupt) return;
 		this.prevAmountSold = 0;
 		this.ticks++;
-		this.payUpkeep();
+		if(this.ticks % this.upkeep['interval'] == 0) {
+			this.saveMin(this.upkeep['resource'], this.upkeep['cost']*2);
+			this.payUpkeep();
+		}
+
 		this.doProduction();
 	}
 	payUpkeep() {
-		if(this.ticks % this.upkeep['interval'] == 0) {
-			// console.log(this.upkeep['resource'], this.upkeep['cost']);
-			if(this.has(this.upkeep['resource'], this.upkeep['cost']) ) {
-				this.pay(this.upkeep['resource'], this.upkeep['cost']);
+		// console.log(this.upkeep['resource'], this.upkeep['cost']);
+		for(item in this.upkeep) {
+			if(item=='interval') continue;
+			if(this.hasReserve(item, this.upkeep[item]) ) {
+				this.payReserve(item, this.upkeep[item]);
+			}
+			else if(this.has(item, this.upkeep[item]) ) {
+				this.pay(item, this.upkeep[item]);
 			}
 			else {
 				this.bankrupt = true;
-			}
+			}			
 		}
 	}
 	doProduction() {
@@ -71,7 +103,8 @@ class Firm {
 		for(let resource in this.produceCost) {
 			this.pay(resource, this.produceCost[resource]);
 		}
-		let amountProduced = this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]);
+		// let amountProduced = this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]);
+		let amountProduced = this.producedGoods[Object.keys(this.producedGoods)[0] ];
 		this.get(Object.keys(this.producedGoods)[0], amountProduced);
 		this.prevAmountProduced = amountProduced;
 	}
@@ -95,14 +128,36 @@ class Firm {
 	has(resource, amount) {
 		return this.inventory[resource] >= amount;
 	}
+	hasReserve(resource, amount) {
+		return this.reserve[resource] >= amount;		
+	}
 	pay(resource, amount) {
 		this.inventory[resource] -= amount;
+	}
+	payReserve(resource, amount) {
+		this.reserve[resource] -= amount;
 	}
 	get(resource, amount) {
 		this.inventory[resource] += amount;	
 	}
 	type() {
 		return this.constructor.name;
+	}
+	save(resource, amount) {
+		amount = Math.min(amount, this.inventory[resource]);
+		this.inventory[resource] -= amount;
+		this.reserve[resource] += amount;
+	}
+	saveMin(resource, amount) {
+		amount -= this.reserve[resource];
+		amount = Math.min(amount, this.inventory[resource]);
+		this.inventory[resource] -= amount;
+		this.reserve[resource] += amount;
+	}
+	unsave(resource, amount) {
+		amount = Math.min(amount, this.reserve[resource]);
+		this.reserve[resource] -= amount;
+		this.inventory[resource] += amount;
 	}
 }
 
@@ -119,10 +174,14 @@ function newFirm() {
 	let firmType = random(1,5);//in the expand function, we will call this with the parent's firm type
 	if(firmType == 5) {
 		AIs[currentFirmNum] = new Mine(currentFirmNum);
-	} else if(firmType > 3) {
-		AIs[currentFirmNum] = new Smith(currentFirmNum);
-	} else {
+	} else if(firmType == 4) {
 		AIs[currentFirmNum] = new Farm(currentFirmNum);
+	} else if(firmType == 3) {
+		AIs[currentFirmNum] = new Smith(currentFirmNum);
+	} else if(firmType == 2) {
+		AIs[currentFirmNum] = new Mill(currentFirmNum);
+	} else {
+		AIs[currentFirmNum] = new Forester(currentFirmNum);
 	}
 	currentFirmNum++;
 }
