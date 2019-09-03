@@ -71,8 +71,8 @@ class Firm {
 		this.prevAmountSold = 0;
 		this.ticks++;
 		if(this.ticks % this.upkeep['interval'] == 0) {
-			this.saveMin(this.upkeep['resource'], this.upkeep['cost']*2);
 			this.payUpkeep();
+			this.saveMin(this.upkeep['resource'], this.upkeep['cost']*2);
 		}
 
 		this.doProduction();
