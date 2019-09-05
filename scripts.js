@@ -8,7 +8,7 @@ window.onload = function() {
 		let tmp = paused;
 		paused = false;
 		tick();
-		paused = tmp;		
+		paused = tmp;
 	};
 }
 
@@ -35,6 +35,7 @@ class Firm {
 			'lumber': startInventory.lumber || 0,
 			'metal': startInventory.metal || 0,
 			'wheat': startInventory.wheat || 0,
+			'flour': startInventory.flour || 0,
 			'tools': startInventory.tools || 0
 		};
 		this.reserve = {
@@ -44,6 +45,7 @@ class Firm {
 			'lumber': 0,
 			'metal': 0,
 			'wheat': 0,
+			'flour': 0,
 			'tools': 0
 		};
 		// this.inventory = {
@@ -89,7 +91,7 @@ class Firm {
 			}
 			else {
 				this.bankrupt = true;
-			}			
+			}
 		}
 	}
 	doProduction() {
@@ -116,8 +118,9 @@ class Firm {
 		// if(this.inventory[sellResource]<50) { // if it doesn't have much
 		if(this.prevAmountProduced > this.prevAmountSold) { // produced more than sold
 			this.sell[sellResource] -= random(1,2);
+			//console.log("I sold!");
 		} else {
-			this.sell[sellResource] += random(1,2);
+			this.sell[sellResource] += random(1,2);//could this make prices negative/0?
 		}
 		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
 	}
@@ -129,7 +132,7 @@ class Firm {
 		return this.inventory[resource] >= amount;
 	}
 	hasReserve(resource, amount) {
-		return this.reserve[resource] >= amount;		
+		return this.reserve[resource] >= amount;
 	}
 	pay(resource, amount) {
 		this.inventory[resource] -= amount;
@@ -138,7 +141,7 @@ class Firm {
 		this.reserve[resource] -= amount;
 	}
 	get(resource, amount) {
-		this.inventory[resource] += amount;	
+		this.inventory[resource] += amount;
 	}
 	type() {
 		return this.constructor.name;
@@ -171,16 +174,29 @@ function start() {
 }
 
 function newFirm() {
-	let firmType = random(1,5);//in the expand function, we will call this with the parent's firm type
+	let firmType = random(1,8);//in the expand function, we will call this with the parent's firm type (we can work it so if no type is passed it's random)
 	if(firmType == 5) {
 		AIs[currentFirmNum] = new Mine(currentFirmNum);
-	} else if(firmType == 4) {
+	}
+	  else if(firmType == 4) {
 		AIs[currentFirmNum] = new Farm(currentFirmNum);
-	} else if(firmType == 3) {
+	}
+	  else if(firmType == 3) {
 		AIs[currentFirmNum] = new Smith(currentFirmNum);
-	} else if(firmType == 2) {
+	}
+	  else if(firmType == 2) {
 		AIs[currentFirmNum] = new Mill(currentFirmNum);
-	} else {
+	}
+	  else if(firmType == 6) {
+		AIs[currentFirmNum] = new Mint(currentFirmNum);
+	}
+	  else if(firmType == 7) {
+		AIs[currentFirmNum] = new Baker(currentFirmNum);
+	}
+	  else if(firmType == 8) {
+		AIs[currentFirmNum] = new Refinery(currentFirmNum);
+	}
+	  else {
 		AIs[currentFirmNum] = new Forester(currentFirmNum);
 	}
 	currentFirmNum++;

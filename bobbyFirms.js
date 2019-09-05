@@ -21,7 +21,7 @@ class Mine extends Firm {
 		this.expandReady = {'money': 700, 'bread': 120, 'tools': 30, 'lumber': 20}; //this code prevent firms from bankrupting themselves in expansion
 		this.expandCost = {'money': 400, 'bread': 60, 'tools': 20, 'lumber': 20};//what to deduct from inventory
 //while we do not have money being added to the system through a 'Mint' firm, we need to have the money supply increase here
-//by deducting less than we add. 
+//by deducting less than we add.
 //for the sake of simplicity, a firm will not need have any of what they produce to expand for now.
 //if you think about it, you'll see why that's hard to program
 	}
@@ -112,7 +112,7 @@ class Mill extends Firm {
 
 		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 10}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */ 
+		decide how to add it in */
 		this.efficiency = normal(-3,3);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'wheat': 200, 'bread':10};//what it takes for this firm to produce
@@ -137,7 +137,7 @@ class Baker extends Firm {
 
 		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 18}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */ 
+		decide how to add it in */
 		this.efficiency = normal(-3,3);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'flour': 40, 'lumber': 2};//what it takes for this firm to produce
@@ -162,7 +162,7 @@ class Refinery extends Firm {
 
 		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 14}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */ 
+		decide how to add it in */
 		this.efficiency = normal(-3,3);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'bread':10, 'ore': 40};//what it takes for this firm to produce
@@ -184,12 +184,12 @@ class Mint extends Firm { //The mint class actually isn't special. It will just 
 	constructor(firmNum) {
 		super({'money': 400, 'bread': 40, 'tools': 10, 'metal': 40, 'lumber': 10,}, firmNum);
 
-		//this.sell = {'flour': 40}; the mint does not sell anything
+		this.sell = {'money': 1}; //the mint does not sell anything, code doesnt understand.
 		this.buy = {'bread': 30, 'metal': 30,}; //what it is buying, can be mutliple
 
 		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 21}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */ 
+		decide how to add it in */
 		this.efficiency = normal(-3,3);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'bread':20, 'metal': 20};//what it takes for this firm to produce
@@ -206,12 +206,12 @@ class Mint extends Firm { //The mint class actually isn't special. It will just 
 }
 
 
-/*TO DO: 
+/*TO DO:
 
 Add where firms buy from lowest price to highest
-Add firms buying in the proper ratio 
-Add firms buying their fixed  (add to while loop if tic % 10 == 0 (ie is rent day) 
-then try to buy your requirements, if you can't roll to die. Must watch if this results in 
+Add firms buying in the proper ratio
+Add firms buying their fixed  (add to while loop if tic % 10 == 0 (ie is rent day)
+then try to buy your requirements, if you can't roll to die. Must watch if this results in
 price of lumber fluctuating wildly. (YOU ARE HERE)
 
 Add firms, upon reaching a point of wealth, buying their expansion requirements
