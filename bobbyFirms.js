@@ -175,7 +175,7 @@ class Mint extends Firm { //The mint class actually isn't special. It will just 
 		/*in future there may be production substitutes, you can either have bread OR meat etc.
 		That will make the supply curve smoother as well*/
 		this.producedGoods = {'money': 40};//what this firm is producing
-    this.variance = (1, 5);
+    this.variance = [1, 5];
 	
     this.expandRequirements = {'bread': 80, 'metal': 80};
 		this.expandReady = {'money': 600, 'bread': 80, 'tools': 20, 'metal': 80, 'lumber': 30}; //this code prevent firms from bankrupting themselves in expansion
