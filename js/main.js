@@ -11,6 +11,7 @@ window.onload = ()=> {
 }
 
 let paused = false;
+// let paused = true;
 document.onkeydown = (evt)=> {
 	evt = evt || window.event;
 	if(evt.keyCode == 27) {

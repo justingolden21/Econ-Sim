@@ -24,6 +24,22 @@ function display(firms) {
 	document.getElementById('firms').innerHTML = AIs.length;
 	document.getElementById('activity').innerHTML = activity +
 		' <i class="fas fa-arrow-' + (activity > prevActivity ? 'up' : 'down') + '"></i>';
+
+
+	let totalInventory = {};
+	tmpHTML = '';
+	for(firm in firms) {
+		let inv = firms[firm].inventory;
+		for(item in inv) {
+			if(!totalInventory[item])
+				totalInventory[item] = 0;
+			totalInventory[item] += inv[item];
+		}
+	}
+	for(item in totalInventory) {
+		tmpHTML += item + ': ' + totalInventory[item] + ' | ';
+	}
+	document.getElementById('total-resources').innerHTML = tmpHTML;
 }
 
 function round(num, places) {
