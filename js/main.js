@@ -189,6 +189,7 @@ function newFirm(firmType) {
 //  tick stuff
 let ticks = 0;
 let activity = 0;
+let prevActivity = 0;
 let tradeInterval = 3;
 function tick(overridePause=false) {
 	if(paused && !overridePause) return;
@@ -197,6 +198,7 @@ function tick(overridePause=false) {
 		AIs[i].tick();
 	}
 	if(ticks % tradeInterval == 0) {
+		prevActivity = activity;
 		activity = 0;
 		doTrades(AIs.filter(AI => AI.bankrupt==false) );
 		for(let i=0; i<AIs.length; i++) {

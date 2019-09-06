@@ -21,7 +21,9 @@ function display(firms) {
 
 	document.getElementById('display').innerHTML = tmpHTML;
 	document.getElementById('ticks').innerHTML = ticks;
-	document.getElementById('activity').innerHTML = activity;
+	document.getElementById('firms').innerHTML = AIs.length;
+	document.getElementById('activity').innerHTML = activity +
+		' <i class="fas fa-arrow-' + (activity > prevActivity ? 'up' : 'down') + '"></i>';
 }
 
 function round(num, places) {
