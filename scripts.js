@@ -1,6 +1,6 @@
 window.onload = function() {
 	start();
-	window.setInterval(tick, 1000);
+	window.setInterval(tick, 100);
 	document.getElementById('pause-btn').onclick = function() {
 		paused = !paused;
 	}
@@ -75,10 +75,10 @@ class Firm {
 		this.ticks++;
 		if(this.ticks % this.upkeep['interval'] == 0) {
 			this.payUpkeep();
-			for(item in this.upkeep) {
-				if(item=='interval') continue;
-					this.saveMin(item, this.upkeep[item]*2);
-			}
+			// for(item in this.upkeep) {
+			// 	if(item=='interval') continue;
+			// 		this.saveMin(item, this.upkeep[item]*2);
+			// }
 		}
 
 		this.doProduction();
@@ -112,7 +112,8 @@ class Firm {
 
 		let amountProduced = this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]);
 		amountProduced *= 0.95 + 0.1*this.efficiency;
-		amountProduced = Math.round(amountProduced);
+		// amountProduced = Math.round(amountProduced);
+		amountProduced = Math.round(amountProduced) * 2;
 		this.get(Object.keys(this.producedGoods)[0], amountProduced);
 		this.prevAmountProduced = amountProduced;
 	}
@@ -122,7 +123,7 @@ class Firm {
 		// console.log(this.inventory[sellResource] );
 		// if(this.inventory[sellResource]==0) { // if it ran out
 		// if(this.inventory[sellResource]<50) { // if it doesn't have much
-		if(this.prevAmountProduced > this.prevAmountSold) { // produced more than sold
+		if(this.prevAmountProduced >= this.prevAmountSold) { // produced more than sold
 			this.sell[sellResource] -= random(1,2);
 			//console.log("I sold!");
 		} else {
@@ -173,7 +174,7 @@ class Firm {
 let AIs = [];
 let currentFirmNum = 0;
 function start() {
-	for(let i=0; i<45; i++) {
+	for(let i=0; i<100; i++) {
 		newFirm();
 	}
 	display(AIs);

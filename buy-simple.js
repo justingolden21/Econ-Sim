@@ -1,5 +1,4 @@
 // todo: if worth producing
-// todo: do multiple sellers
 function doBuy(firm, purchaseCosts) {
 	let input1 = Object.keys(firm.produceCost)[0];
 	let input2 = Object.keys(firm.produceCost)[1];
@@ -24,8 +23,14 @@ function doBuy(firm, purchaseCosts) {
 
 		let costPerProduce = input1produceCost * input1cost + input2produceCost * input2cost;
 
+		// if don't have money to produce once
 		if(firm.inventory['money'] < costPerProduce) {
-			// if don't have money to produce once
+			return;
+		}
+		// if not worth if to produce
+		let sellPrice = firm.sell[Object.keys(firm.sell)[0] ];
+		let amountProduced = Object.values(firm.producedGoods)[0];
+		if(costPerProduce > 2*sellPrice*amountProduced) { // if losing more than 2x as much
 			return;
 		}
 
