@@ -36,9 +36,12 @@ function display(firms) {
 			totalInventory[item] += inv[item];
 		}
 	}
+	let totalResources = 0;
 	for(item in totalInventory) {
 		tmpHTML += item + ': ' + totalInventory[item] + ' | ';
+		totalResources += totalInventory[item];
 	}
+	tmpHTML += 'Total: ' + totalResources;
 	document.getElementById('total-resources').innerHTML = tmpHTML;
 }
 
