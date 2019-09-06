@@ -123,11 +123,11 @@ class Firm {
 		// console.log(this.inventory[sellResource] );
 		// if(this.inventory[sellResource]==0) { // if it ran out
 		// if(this.inventory[sellResource]<50) { // if it doesn't have much
-		if(this.prevAmountProduced >= this.prevAmountSold) { // produced more than sold
-			this.sell[sellResource] -= random(1,2);
+		if(this.prevAmountProduced > this.prevAmountSold) { // produced more than sold
+			this.sell[sellResource] -= 1;
 			//console.log("I sold!");
 		} else {
-			this.sell[sellResource] += random(1,2);//could this make prices negative/0?
+			this.sell[sellResource] += 1;
 		}
 		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
 	}

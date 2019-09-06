@@ -3,6 +3,7 @@ logic for firm deciding when to not buy?
 	firm buying chooses lowest sell price?
 resources decay or go away over time? food?
 
+LIMIT FOR HOW MUCH THEY CAN PRODUCE PER PRODUCTION AND HOW MUCH THEY CAN HOLD
 
 ideas for debugging:
 prices go to 1 so they dont deem it worth it to buy
