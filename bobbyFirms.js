@@ -1,16 +1,9 @@
-//bobbyFirms.js
-
 class Mine extends Firm {
 	constructor(firmNum) {
-		super({'money':400, 'bread':40, 'tools':40}, firmNum);//starting inventory
+		super({'money':400, 'bread':40, 'tools':40}, firmNum); // starting inventory
 
-		this.sell = {'ore': 40};//what it is selling, one item for now. don't know what this number is
-		this.buy = {'bread': 30, 'tools': 100}; //what it is buying, can be mutliple
-
-		this.upkeep = { 'tools': 10, 'interval': 19}; /*it's upkeep fixed costs
-		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */
-		this.efficiency = normal(-2,2);// a random stand in for the 'talent' of the firm
+		this.sell = {'ore': 1}; // resource sold and its price
+		this.upkeep = { 'tools': 10, 'interval': 19};
 
 		this.produceCost = {'bread': 30, 'tools': 10};//what it takes for this firm to produce
 		/*in future there may be production substitutes, you can either have bread OR meat etc.
@@ -31,13 +24,11 @@ class Smith extends Firm {
 	constructor(firmNum) {
 		super({'money': 300, 'metal': 20, 'lumber': 20}, firmNum);//starting inventory
 
-		this.sell = {'tools': 40};//what it is selling, one item for now. don't know what this number is
-		this.buy = {'metal': 10, 'lumber': 15}; //what it is buying, can be mutliple
+		this.sell = {'tools': 1};//what it is selling, one item for now. don't know what this number is
 
 		this.upkeep = { 'bread': 10, 'interval': 9}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
 		decide how to add it in */
-		this.efficiency = normal(-2,2);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'metal': 10, 'lumber': 10};//what it takes for this firm to produce
 		/*in future there may be production substitutes, you can either have bread OR meat etc.
@@ -56,13 +47,11 @@ class Forester extends Firm {
 	constructor(firmNum) {
 		super({'money': 300, 'bread': 20, 'tools': 10}, firmNum);//starting inventory
 
-		this.sell = {'lumber': 40};//what it is selling, one item for now. don't know what this number is
-		this.buy = {'bread': 40, 'tools': 35}; //what it is buying, can be mutliple
+		this.sell = {'lumber': 1};//what it is selling, one item for now. don't know what this number is
 
 		this.upkeep = { 'bread': 10, 'tools':1, 'interval': 12}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
 		decide how to add it in */
-		this.efficiency = normal(-2,2);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'bread': 10, 'tools': 5};//what it takes for this firm to produce
 		/*in future there may be production substitutes, you can either have bread OR meat etc.
@@ -82,13 +71,11 @@ class Farm extends Firm {
 	constructor(firmNum) {
 		super({'money': 200, 'bread': 20, 'tools': 10}, firmNum);//starting inventory
 
-		this.sell = {'wheat': 10};//what it is selling, one item for now. don't know what this number is
-		this.buy = {'bread': 30, 'tools': 30}; //what it is buying, can be mutliple
+		this.sell = {'wheat': 1};//what it is selling, one item for now. don't know what this number is
 
 		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 17}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
 		decide how to add it in */
-		this.efficiency = normal(-15,15);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'bread': 10, 'tools': 2};//what it takes for this firm to produce
 		/*in future there may be production substitutes, you can either have bread OR meat etc.
@@ -107,13 +94,11 @@ class Mill extends Firm {
 	constructor(firmNum) {
 		super({'money': 200, 'bread': 20, 'wheat': 500, 'tools': 10}, firmNum);//starting inventory
 
-		this.sell = {'flour': 15};//what it is selling, one item for now. don't know what this number is
-		this.buy = {'bread': 30, 'wheat': 10}; //what it is buying, can be mutliple
+		this.sell = {'flour': 1};//what it is selling, one item for now. don't know what this number is
 
 		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 10}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
 		decide how to add it in */
-		this.efficiency = normal(-3,3);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'wheat': 200, 'bread':10};//what it takes for this firm to produce
 		/*in future there may be production substitutes, you can either have bread OR meat etc.
@@ -132,13 +117,11 @@ class Baker extends Firm {
 	constructor(firmNum) {
 		super({'money': 200, 'bread': 20, 'tools': 10, 'lumber': 6}, firmNum);//starting inventory
 
-		this.sell = {'bread': 30};//what it is selling, one item for now. don't know what this number is
-		this.buy = {'flour': 50, 'lumber': 10}; //what it is buying, can be mutliple
+		this.sell = {'bread': 1};//what it is selling, one item for now. don't know what this number is
 
 		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 18}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
 		decide how to add it in */
-		this.efficiency = normal(-3,3);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'flour': 40, 'lumber': 2};//what it takes for this firm to produce
 		/*in future there may be production substitutes, you can either have bread OR meat etc.
@@ -157,13 +140,11 @@ class Refinery extends Firm {
 	constructor(firmNum) {
 		super({'money': 300, 'bread': 30, 'tools': 5, 'ore': 80, 'lumber': 10,}, firmNum);
 
-		this.sell = {'metal': 10};//what it is selling, one item for now. don't know what this number is
-		this.buy = {'bread': 30, 'ore': 10,}; //what it is buying, can be mutliple
+		this.sell = {'metal': 1};//what it is selling, one item for now. don't know what this number is
 
 		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 14}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
 		decide how to add it in */
-		this.efficiency = normal(-3,3);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'bread':10, 'ore': 40};//what it takes for this firm to produce
 		/*in future there may be production substitutes, you can either have bread OR meat etc.
@@ -185,12 +166,10 @@ class Mint extends Firm { //The mint class actually isn't special. It will just 
 		super({'money': 400, 'bread': 40, 'tools': 10, 'metal': 40, 'lumber': 10,}, firmNum);
 
 		this.sell = {'money': 1}; //the mint does not sell anything, code doesnt understand.
-		this.buy = {'bread': 30, 'metal': 30,}; //what it is buying, can be mutliple
 
 		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 21}; /*it's upkeep fixed costs
 		I changed upkeep to work exactly like the others, with an interval commented, so you can
 		decide how to add it in */
-		this.efficiency = normal(-3,3);// a random stand in for the 'talent' of the firm
 
 		this.produceCost = {'bread':20, 'metal': 20};//what it takes for this firm to produce
 		/*in future there may be production substitutes, you can either have bread OR meat etc.

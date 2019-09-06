@@ -14,7 +14,7 @@ function display(firms) {
 		// 	tmpHTML += item + ': ' + firms[firm].reserve[item] + 
 		// 	'<div class="progressbar" style="width:' + Math.min(firms[firm].reserve[item]/10,200) + 'px;"></div>';
 		// }
-		tmpHTML += '<hr>Efficiency: ' + firms[firm].efficiency + '<br>';
+		tmpHTML += '<hr>Efficiency: ' + round(firms[firm].efficiency, 3) + '<br>';
 		tmpHTML += 'Sell Price: ' + firms[firm].sell[Object.keys(firms[firm].sell)[0] ];
 		tmpHTML += '</div>';
 	}
@@ -22,4 +22,8 @@ function display(firms) {
 	document.getElementById('display').innerHTML = tmpHTML;
 
 	document.getElementById('ticks').innerHTML = ticks;
+}
+
+function round(num, places) {
+	return Number( (num).toFixed(places) );
 }

@@ -61,6 +61,7 @@ class Firm {
 		// 	'tools': 0
 		// };
 		this.firmNum = firmNum;
+		this.efficiency = normal01();
 
 		this.ticks = 0;
 		this.bankrupt = false;
@@ -108,8 +109,9 @@ class Firm {
 		for(let resource in this.produceCost) {
 			this.pay(resource, this.produceCost[resource]);
 		}
-		// let amountProduced = this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]);
-		let amountProduced = this.producedGoods[Object.keys(this.producedGoods)[0] ];
+		let amountProduced = this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]);
+		amountProduced *= 1 + 0.1*this.efficiency;
+		amountProduced = Math.round(amountProduced);
 		this.get(Object.keys(this.producedGoods)[0], amountProduced);
 		this.prevAmountProduced = amountProduced;
 	}
@@ -243,17 +245,14 @@ function shuffle(a) {
 }
 
 // https://stackoverflow.com/questions/25582882/javascript-math-random-normal-distribution-gaussian-bell-curve
-function normalFloat() {
+// Standard Normal variate using Box-Muller transform.
+function normal() {
 	let u = 0, v = 0;
 	while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
 	while(v === 0) v = Math.random();
-	let num = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
-	num = num / 10.0 + 0.5; // Translate to 0 -> 1
-	if (num > 1 || num < 0) return normalFloat(); // resample between 0 and 1
-	return num;
+	return Math.sqrt(-2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v);
 }
-
-// normal int in range
-function normal(min, max) {
-	return Math.floor(normalFloat() * (max - min + 1) ) + min;
+function normal01() {
+	let tmp = 0.33*normal()+0.5;
+	return tmp < 0 ? 0 : tmp > 1 ? 1 : tmp;
 }
