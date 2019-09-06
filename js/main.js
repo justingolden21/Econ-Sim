@@ -35,16 +35,6 @@ class Firm {
 			'flour' :  startInventory.flour  || 0,
 			'tools' :  startInventory.tools  || 0
 		};
-		this.reserve = {
-			'money' : 0,
-			'bread' : 0,
-			'ore'   : 0,
-			'lumber': 0,
-			'metal' : 0,
-			'wheat' : 0,
-			'flour' : 0,
-			'tools' : 0
-		};
 		this.firmNum = currentFirmNum++;
 		this.efficiency = normal01();
 
@@ -60,20 +50,13 @@ class Firm {
 		this.ticks++;
 		if(this.ticks % this.upkeep['interval'] == 0) {
 			this.payUpkeep();
-			// for(item in this.upkeep) {
-			// 	if(item=='interval') continue;
-			// 		this.saveMin(item, this.upkeep[item]*2);
-			// }
 		}
 		this.doProduction();
 	}
 	payUpkeep() {
 		for(item in this.upkeep) {
 			if(item=='interval') continue;
-			if(this.hasReserve(item, this.upkeep[item]) ) {
-				this.payReserve(item, this.upkeep[item]);
-			}
-			else if(this.has(item, this.upkeep[item]) ) {
+			if(this.has(item, this.upkeep[item]) ) {
 				this.pay(item, this.upkeep[item]);
 			}
 			else {
@@ -112,6 +95,8 @@ class Firm {
 			this.sell[sellResource] += 1;
 		}
 		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
+
+		// this.forSale = this.inventory[sellResource] - (this.upkeep[sellResource] || 0);
 	}
 	give(firm, resource, amount) {
 		firm.inventory[resource] += amount;
@@ -120,36 +105,14 @@ class Firm {
 	has(resource, amount) {
 		return this.inventory[resource] >= amount;
 	}
-	hasReserve(resource, amount) {
-		return this.reserve[resource] >= amount;
-	}
 	pay(resource, amount) {
 		this.inventory[resource] -= amount;
-	}
-	payReserve(resource, amount) {
-		this.reserve[resource] -= amount;
 	}
 	get(resource, amount) {
 		this.inventory[resource] += amount;
 	}
 	type() {
 		return this.constructor.name;
-	}
-	save(resource, amount) {
-		amount = Math.min(amount, this.inventory[resource]);
-		this.inventory[resource] -= amount;
-		this.reserve[resource] += amount;
-	}
-	saveMin(resource, amount) {
-		amount -= this.reserve[resource];
-		amount = Math.min(amount, this.inventory[resource]);
-		this.inventory[resource] -= amount;
-		this.reserve[resource] += amount;
-	}
-	unsave(resource, amount) {
-		amount = Math.min(amount, this.reserve[resource]);
-		this.reserve[resource] -= amount;
-		this.inventory[resource] += amount;
 	}
 }
 
@@ -201,10 +164,11 @@ function tick(overridePause=false) {
 	if(ticks % tradeInterval == 0) {
 		prevActivity = activity;
 		activity = 0;
-		doTrades(AIs.filter(AI => AI.bankrupt==false) );
 		for(let i=0; i<AIs.length; i++) {
 			AIs[i].adjust();
 		}
+		doTrades(AIs.filter(AI => AI.bankrupt==false) );
+		
 	}
 	ticks++;
 	display(AIs);

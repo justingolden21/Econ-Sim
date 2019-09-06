@@ -1,3 +1,4 @@
+// note: currently none of the upkeep costs are things that they sell
 class Mine extends Firm {
 	constructor() {
 		super({'money':400, 'bread':40, 'tools':40}); // starting inventory
