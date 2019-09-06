@@ -74,7 +74,10 @@ class Firm {
 		this.ticks++;
 		if(this.ticks % this.upkeep['interval'] == 0) {
 			this.payUpkeep();
-			this.saveMin(this.upkeep['resource'], this.upkeep['cost']*2);
+			for(item in this.upkeep) {
+				if(item=='interval') continue;
+					this.saveMin(item, this.upkeep[item]*2);
+			}
 		}
 
 		this.doProduction();
@@ -90,7 +93,7 @@ class Firm {
 				this.pay(item, this.upkeep[item]);
 			}
 			else {
-				this.bankrupt = true;
+				// this.bankrupt = true;
 			}
 		}
 	}
