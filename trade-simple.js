@@ -3,9 +3,15 @@ sort sellers by resource sold, from cheapest to most expensive
 randomize order of buyers, then each one goes and updates its buy info, then buys that many
 */
 
+// enums
+const PRICE = 0;
+const AVAILABLE = 1;
+const FIRM_NUM = 2;
+
 function doTrades(firms) {
 	// create purchase costs object
 
+	// might increase sell size from 1 later
 	let purchaseCosts = {};
 	for(firm in firms) {
 		let resource = Object.keys(firms[firm].sell)[0];
@@ -16,11 +22,11 @@ function doTrades(firms) {
 			}
 			// each resource is a key and the value is a sorted (will sort later)
 			// list of the resource's cost, amount available, and firm number
-			purchaseCosts[resource].push([
-				firms[firm].sell[resource], // resource cost (will sort by this) [0]
-				firms[firm].inventory[resource], // amount available [1]
-				firms[firm].firmNum // firm number [2]
-			]);
+			let tmp = [];
+			tmp[PRICE] = firms[firm].sell[resource];
+			tmp[AVAILABLE] = firms[firm].inventory[resource];
+			tmp[FIRM_NUM] = firms[firm].firmNum;
+			purchaseCosts[resource].push(tmp);
 		}
 	}
 

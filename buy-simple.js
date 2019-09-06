@@ -1,3 +1,5 @@
+// todo: if worth producing
+// todo: do multiple sellers
 function doBuy(firm, purchaseCosts) {
 	let input1 = Object.keys(firm.produceCost)[0];
 	let input2 = Object.keys(firm.produceCost)[1];
@@ -22,26 +24,27 @@ function doBuy(firm, purchaseCosts) {
 		// let input1available = input1purchaseCosts[input1Idx][1]; // amount available at current price
 		// let input2available = input2purchaseCosts[input2Idx][1]; // amount available at current price
 
-	input1cost = input1purchaseCosts[0][0]; // cost at current price
-	input2cost = input2purchaseCosts[0][0]; // cost at current price
+	input1cost = input1purchaseCosts[0][PRICE];
+	input2cost = input2purchaseCosts[0][PRICE];
 
-	let input1available = input1purchaseCosts[0][1]; // amount available at current price
-	let input2available = input2purchaseCosts[0][1]; // amount available at current price
+	let input1available = input1purchaseCosts[0][AVAILABLE];
+	let input2available = input2purchaseCosts[0][AVAILABLE];
 
 	let costPerProduce = input1produceCost * input1cost + input2produceCost * input2cost;
 
 	if(firm.inventory['money'] < costPerProduce) {
+		// if don't have money to produce once
 		return;
 	}
 
 	let amountCanProduce = Math.floor(firm.inventory['money'] / costPerProduce);
 
 	// let seller1Num = input1purchaseCosts[input1Idx][2]; // firm num
-	let seller1Num = input1purchaseCosts[0][2]; // firm num
-	let seller1 = AIs[seller1Num];
+	let seller1Num = input1purchaseCosts[0][FIRM_NUM];
+	let seller1 = AIs[seller1Num]; // firm selling resource 1
 	// let seller2Num = input2purchaseCosts[input1Idx][2]; // firm num
-	let seller2Num = input2purchaseCosts[0][2]; // firm num
-	let seller2 = AIs[seller2Num];
+	let seller2Num = input2purchaseCosts[0][FIRM_NUM];
+	let seller2 = AIs[seller2Num]; // firm selling resource 2
 
 	let input1toBuy = amountCanProduce * input1produceCost;
 	let input2toBuy = amountCanProduce * input2produceCost;
@@ -63,13 +66,13 @@ function doBuy(firm, purchaseCosts) {
 	doTrade(seller2, firm, input2, input2toBuy);
 
 	// update purchaseCosts obj for next firm
-	purchaseCosts[input1][0][1] -= input1toBuy; // idx 1 is amount available
-	purchaseCosts[input2][0][1] -= input2toBuy;
+	purchaseCosts[input1][0][AVAILABLE] -= input1toBuy;
+	purchaseCosts[input2][0][AVAILABLE] -= input2toBuy;
 
-	if(purchaseCosts[input1][0][1]==0) {
+	if(purchaseCosts[input1][0][AVAILABLE]==0) {
 		purchaseCosts[input1].splice(0,1); // remove first elm
 	}
-	if(purchaseCosts[input2][0][1]==0) {
+	if(purchaseCosts[input2][0][AVAILABLE]==0) {
 		purchaseCosts[input2].splice(0,1); // remove first elm
 	}
 
