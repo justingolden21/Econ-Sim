@@ -3,7 +3,7 @@ class Mine extends Firm {
 	constructor() {
 		super({'money':400, 'bread':40, 'tools':40}); // starting inventory
 
-		this.sell = {'ore': 1}; // resource sold and its price
+		this.sell = {'ore': 10}; // resource sold and its price
 
 		this.upkeep = {'tools': 10, 'interval': 19};
 
@@ -27,7 +27,7 @@ class Smith extends Firm {
 	constructor() {
 		super({'money': 300, 'metal': 20, 'lumber': 20});
 
-		this.sell = {'tools': 1};
+		this.sell = {'tools': 10};
 
 		this.upkeep = { 'bread': 10, 'interval': 9};
 
@@ -45,7 +45,7 @@ class Forester extends Firm {
 	constructor() {
 		super({'money': 300, 'bread': 20, 'tools': 10});
 
-		this.sell = {'lumber': 1};
+		this.sell = {'lumber': 10};
 
 		this.upkeep = { 'bread': 10, 'tools':1, 'interval': 12};
 
@@ -63,7 +63,7 @@ class Farm extends Firm {
 	constructor() {
 		super({'money': 200, 'bread': 20, 'tools': 10});
 
-		this.sell = {'wheat': 1};
+		this.sell = {'wheat': 10};
 
 		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 17};
 
@@ -81,7 +81,7 @@ class Mill extends Firm {
 	constructor() {
 		super({'money': 200, 'bread': 20, 'wheat': 500, 'tools': 10});
 		
-		this.sell = {'flour': 1};
+		this.sell = {'flour': 10};
 
 		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 10};
 
@@ -99,7 +99,7 @@ class Baker extends Firm {
 	constructor() {
 		super({'money': 200, 'bread': 20, 'tools': 10, 'lumber': 6});
 
-		this.sell = {'bread': 1};
+		this.sell = {'bread': 10};
 
 		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 18};
 
@@ -117,7 +117,7 @@ class Refinery extends Firm {
 	constructor() {
 		super({'money': 300, 'bread': 30, 'tools': 5, 'ore': 80, 'lumber': 10,});
 
-		this.sell = {'metal': 1};
+		this.sell = {'metal': 10};
 
 		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 14};
 

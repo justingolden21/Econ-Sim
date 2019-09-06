@@ -88,10 +88,12 @@ class Firm {
 	adjust() {
 		// can edit function so seller prefers to not sell and save resources for later
 		let sellResource = Object.keys(this.sell)[0];
+		// console.log(this.prevAmountProduced, this.prevAmountSold);
 		if(this.prevAmountProduced > this.prevAmountSold) { // produced more than sold
 			this.sell[sellResource] -= 1;
 			//console.log("I sold!");
 		} else {
+			// console.log('goin up');
 			this.sell[sellResource] += 1;
 		}
 		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
@@ -130,10 +132,10 @@ function start() {
 // can be called with firm type, if not random firm type
 function newFirm(firmType) {
 	if(!firmType)
-		firmType = random(1,8);
+		firmType = random(1,12);
 
 	if(firmType == 2)
-		AIs[currentFirmNum] = new Mill();
+		AIs[currentFirmNum] = new Forester();
 	else if(firmType == 3)
 		AIs[currentFirmNum] = new Smith();
 	else if(firmType == 4)
@@ -147,7 +149,7 @@ function newFirm(firmType) {
 	else if(firmType == 8)
 		AIs[currentFirmNum] = new Refinery();
 	else
-		AIs[currentFirmNum] = new Forester();
+		AIs[currentFirmNum] = new Mill();
 }
 
 //  tick stuff
@@ -164,10 +166,11 @@ function tick(overridePause=false) {
 	if(ticks % tradeInterval == 0) {
 		prevActivity = activity;
 		activity = 0;
+		doTrades(AIs.filter(AI => AI.bankrupt==false) );
 		for(let i=0; i<AIs.length; i++) {
 			AIs[i].adjust();
 		}
-		doTrades(AIs.filter(AI => AI.bankrupt==false) );
+
 		
 	}
 	ticks++;

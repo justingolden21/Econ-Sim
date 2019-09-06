@@ -27,6 +27,7 @@ function display(firms) {
 
 
 	let totalInventory = {};
+	let firmTypes = {};
 	tmpHTML = '';
 	for(firm in firms) {
 		let inv = firms[firm].inventory;
@@ -35,6 +36,9 @@ function display(firms) {
 				totalInventory[item] = 0;
 			totalInventory[item] += inv[item];
 		}
+		if(!firmTypes[firms[firm].type()])
+			firmTypes[firms[firm].type()] = 0;
+		firmTypes[firms[firm].type()]++;
 	}
 	let totalResources = 0;
 	for(item in totalInventory) {
@@ -43,6 +47,11 @@ function display(firms) {
 	}
 	tmpHTML += 'Total: ' + totalResources;
 	document.getElementById('total-resources').innerHTML = tmpHTML;
+	tmpHTML = '';
+	for(type in firmTypes) {
+		tmpHTML += type + ': ' + firmTypes[type] + ' | ';
+	}
+	document.getElementById('firm-types').innerHTML = tmpHTML;
 }
 
 function round(num, places) {
