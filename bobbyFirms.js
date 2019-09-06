@@ -1,212 +1,152 @@
 class Mine extends Firm {
-	constructor(firmNum) {
-		super({'money':400, 'bread':40, 'tools':40}, firmNum); // starting inventory
+	constructor() {
+		super({'money':400, 'bread':40, 'tools':40}); // starting inventory
 
 		this.sell = {'ore': 1}; // resource sold and its price
-		this.upkeep = { 'tools': 10, 'interval': 19};
 
-		this.produceCost = {'bread': 30, 'tools': 10};//what it takes for this firm to produce
-		/*in future there may be production substitutes, you can either have bread OR meat etc.
-		That will make the supply curve smoother as well*/
-		this.producedGoods = {'ore': 100};//what this firm is producing
-    this.variance = [1,15]; //amount praoduction will vary from the value set in producedGoods
-	  this.expandRequirement = {'bread': 120, 'tools': 30  };
-		this.expandReady = {'money': 700, 'bread': 120, 'tools': 30, 'lumber': 20}; //this code prevent firms from bankrupting themselves in expansion
-		this.expandCost = {'money': 400, 'bread': 60, 'tools': 20, 'lumber': 20};//what to deduct from inventory
-//while we do not have money being added to the system through a 'Mint' firm, we need to have the money supply increase here
-//by deducting less than we add.
-//for the sake of simplicity, a firm will not need have any of what they produce to expand for now.
-//if you think about it, you'll see why that's hard to program
+		this.upkeep = {'tools': 10, 'interval': 19};
+
+		this.produceCost = {'bread': 30, 'tools': 10}; // what it takes for this to produce
+		this.producedGoods = {'ore': 100}; // what this is producing
+		this.variance = 15; // amount production will vary from the value set in producedGoods
+
+		// requirement before firm starting trying to accumulate resources necessary to expand
+		this.expandRequirement = {'bread': 120, 'tools': 30};
+
+		// resources necessary to expand
+		this.expandReady = {'money': 700, 'bread': 120, 'tools': 30, 'lumber': 20};
+
+		// resources deducted from inventory upon expansion
+		// note: this is less than expandReady so that firm doesn't go bankrupt upon expansion
+		this.expandCost = {'money': 400, 'bread': 60, 'tools': 20, 'lumber': 20};
 	}
 }
 
 class Smith extends Firm {
-	constructor(firmNum) {
-		super({'money': 300, 'metal': 20, 'lumber': 20}, firmNum);//starting inventory
+	constructor() {
+		super({'money': 300, 'metal': 20, 'lumber': 20});
 
-		this.sell = {'tools': 1};//what it is selling, one item for now. don't know what this number is
+		this.sell = {'tools': 1};
 
-		this.upkeep = { 'bread': 10, 'interval': 9}; /*it's upkeep fixed costs
-		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */
+		this.upkeep = { 'bread': 10, 'interval': 9};
 
-		this.produceCost = {'metal': 10, 'lumber': 10};//what it takes for this firm to produce
-		/*in future there may be production substitutes, you can either have bread OR meat etc.
-		That will make the supply curve smoother as well*/
-		this.producedGoods = {'tools': 20};//what this firm is producing
-
-    this.variance = [1,10];
-	  this.expandRequirement = {'metal': 60, 'lumber': 60};
-		this.expandReady = {'money': 600, 'metal': 60, 'lumber': 60}; //this code prevent firms from bankrupting themselves in expansion
-		this.expandCost = {'money': 300, 'metal': 20,  'lumber': 20};//what to decuct from inventory
-
+		this.produceCost = {'metal': 10, 'lumber': 10};
+		this.producedGoods = {'tools': 20};
+		this.variance = 10;
+		
+		this.expandRequirement = {'metal': 60, 'lumber': 60};
+		this.expandReady = {'money': 600, 'metal': 60, 'lumber': 60};
+		this.expandCost = {'money': 300, 'metal': 20, 'lumber': 20};
 	}
 }
 
 class Forester extends Firm {
-	constructor(firmNum) {
-		super({'money': 300, 'bread': 20, 'tools': 10}, firmNum);//starting inventory
+	constructor() {
+		super({'money': 300, 'bread': 20, 'tools': 10});
 
-		this.sell = {'lumber': 1};//what it is selling, one item for now. don't know what this number is
+		this.sell = {'lumber': 1};
 
-		this.upkeep = { 'bread': 10, 'tools':1, 'interval': 12}; /*it's upkeep fixed costs
-		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */
+		this.upkeep = { 'bread': 10, 'tools':1, 'interval': 12};
 
-		this.produceCost = {'bread': 10, 'tools': 5};//what it takes for this firm to produce
-		/*in future there may be production substitutes, you can either have bread OR meat etc.
-		That will make the supply curve smoother as well*/
-		this.producedGoods = {'lumber': 10 };//what this firm is producing
-	
-    this.variance = [1,5];
-    this.expandRequirement = {'bread': 80, 'tools': 30};
-		this.expandReady = {'money': 500, 'bread': 80, 'tools': 30}; //this code prevent firms from bankrupting themselves in expansion
-		this.expandCost = {'money': 300, 'bread': 30, 'tools': 10};//what to decuct from inventory
+		this.produceCost = {'bread': 10, 'tools': 5};
+		this.producedGoods = {'lumber': 10 };
+		this.variance = 5;
 
+		this.expandRequirement = {'bread': 80, 'tools': 30};
+		this.expandReady = {'money': 500, 'bread': 80, 'tools': 30};
+		this.expandCost = {'money': 300, 'bread': 30, 'tools': 10};
 	}
 }
 
-
 class Farm extends Firm {
-	constructor(firmNum) {
-		super({'money': 200, 'bread': 20, 'tools': 10}, firmNum);//starting inventory
+	constructor() {
+		super({'money': 200, 'bread': 20, 'tools': 10});
 
-		this.sell = {'wheat': 1};//what it is selling, one item for now. don't know what this number is
+		this.sell = {'wheat': 1};
 
-		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 17}; /*it's upkeep fixed costs
-		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */
+		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 17};
 
-		this.produceCost = {'bread': 10, 'tools': 2};//what it takes for this firm to produce
-		/*in future there may be production substitutes, you can either have bread OR meat etc.
-		That will make the supply curve smoother as well*/
-		this.producedGoods = {'wheat': 300};//what this firm is producing
-    this.variance = [1,100];
-	
-    this.expandRequirement = {'bread': 70, 'tools': 30};
-		this.expandReady = {'money': 500, 'bread': 70, 'tools': 30, 'lumber': 15}; //this code prevent firms from bankrupting themselves in expansion
-		this.expandCost = {'money': 200, 'bread': 30, 'tools': 10, 'lumber': 15};//what to decuct from inventory
+		this.produceCost = {'bread': 10, 'tools': 2};
+		this.producedGoods = {'wheat': 300};
+		this.variance = 100;
 
+		this.expandRequirement = {'bread': 70, 'tools': 30};
+		this.expandReady = {'money': 500, 'bread': 70, 'tools': 30, 'lumber': 15};
+		this.expandCost = {'money': 200, 'bread': 30, 'tools': 10, 'lumber': 15}; 
 	}
 }
 
 class Mill extends Firm {
-	constructor(firmNum) {
-		super({'money': 200, 'bread': 20, 'wheat': 500, 'tools': 10}, firmNum);//starting inventory
+	constructor() {
+		super({'money': 200, 'bread': 20, 'wheat': 500, 'tools': 10});
+		
+		this.sell = {'flour': 1};
 
-		this.sell = {'flour': 1};//what it is selling, one item for now. don't know what this number is
+		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 10};
 
-		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 10}; /*it's upkeep fixed costs
-		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */
+		this.produceCost = {'wheat': 200, 'bread':10};
+		this.producedGoods = {'flour': 100};
+		this.variance = 25;
 
-		this.produceCost = {'wheat': 200, 'bread':10};//what it takes for this firm to produce
-		/*in future there may be production substitutes, you can either have bread OR meat etc.
-		That will make the supply curve smoother as well*/
-		this.producedGoods = {'flour': 100};//what this firm is producing
-    this.variance = [1, 25];
-	 
-    this.expandRequirement = {'bread': 50, 'wheat': 1000};
-		this.expandReady = {'money': 500, 'bread': 50, 'wheat': 1000, 'tools': 20, 'lumber': 15}; //this code prevent firms from bankrupting themselves in expansion
-		this.expandCost = {'money': 200, 'wheat': 500, 'bread': 30, 'tools': 10, 'lumber': 15};//what to decuct from inventory
-
+		this.expandRequirement = {'bread': 50, 'wheat': 1000};
+		this.expandReady = {'money': 500, 'bread': 50, 'wheat': 1000, 'tools': 20, 'lumber': 15};
+		this.expandCost = {'money': 200, 'wheat': 500, 'bread': 30, 'tools': 10, 'lumber': 15};
 	}
 }
 
 class Baker extends Firm {
-	constructor(firmNum) {
-		super({'money': 200, 'bread': 20, 'tools': 10, 'lumber': 6}, firmNum);//starting inventory
+	constructor() {
+		super({'money': 200, 'bread': 20, 'tools': 10, 'lumber': 6});
 
-		this.sell = {'bread': 1};//what it is selling, one item for now. don't know what this number is
+		this.sell = {'bread': 1};
 
-		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 18}; /*it's upkeep fixed costs
-		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */
+		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 18};
 
-		this.produceCost = {'flour': 40, 'lumber': 2};//what it takes for this firm to produce
-		/*in future there may be production substitutes, you can either have bread OR meat etc.
-		That will make the supply curve smoother as well*/
-		this.producedGoods = {'bread': 100};//what this firm is producing
-    this.variance = [1, 20];
-	
-    this.expandRequirements = {'flour': 120, 'lumber': 10};
-		this.expandReady = {'money': 500, 'bread': 50, 'tools': 20, 'lumber': 30}; //this code prevent firms from bankrupting themselves in expansion
-		this.expandCost = {'money': 200, 'bread': 30, 'tools': 10, 'lumber': 20};//what to decuct from inventory
+		this.produceCost = {'flour': 40, 'lumber': 2};
+		this.producedGoods = {'bread': 100};
+		this.variance = 20;
 
+		this.expandRequirements = {'flour': 120, 'lumber': 10};
+		this.expandReady = {'money': 500, 'bread': 50, 'tools': 20, 'lumber': 30};
+		this.expandCost = {'money': 200, 'bread': 30, 'tools': 10, 'lumber': 20};
 	}
 }
 
 class Refinery extends Firm {
-	constructor(firmNum) {
-		super({'money': 300, 'bread': 30, 'tools': 5, 'ore': 80, 'lumber': 10,}, firmNum);
+	constructor() {
+		super({'money': 300, 'bread': 30, 'tools': 5, 'ore': 80, 'lumber': 10,});
 
-		this.sell = {'metal': 1};//what it is selling, one item for now. don't know what this number is
+		this.sell = {'metal': 1};
 
-		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 14}; /*it's upkeep fixed costs
-		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */
+		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 14};
 
-		this.produceCost = {'bread':10, 'ore': 40};//what it takes for this firm to produce
-		/*in future there may be production substitutes, you can either have bread OR meat etc.
-		That will make the supply curve smoother as well*/
-		this.producedGoods = {'metal': 30};//what this firm is producing
-    this.variance = [1, 5];
-	
-    this.expandRequirements = {'bread': 40, 'ore': 160};
-		this.expandReady = {'money': 600, 'bread': 40, 'ore': 160, 'tools': 20, 'lumber': 30}; //this code prevent firms from bankrupting themselves in expansion
-		this.expandCost = {'money': 300, 'bread': 30, 'ore': 80, 'tools': 10, 'lumber': 20};//what to decuct from inventory
+		this.produceCost = {'bread':10, 'ore': 40};
+		this.producedGoods = {'metal': 30};
+		this.variance = 5;
 
+		this.expandRequirements = {'bread': 40, 'ore': 160};
+		this.expandReady = {'money': 600, 'bread': 40, 'ore': 160, 'tools': 20, 'lumber': 30};
+		this.expandCost = {'money': 300, 'bread': 30, 'ore': 80, 'tools': 10, 'lumber': 20};
 	}
 }
 
-class Mint extends Firm { //The mint class actually isn't special. It will just not sell anything
-//I imagine this working as each coin being individually molded metal like a piece of art, with
-//very fine artwork making it valuable. Therefore, it will require metal and a large amount of food
-	constructor(firmNum) {
-		super({'money': 400, 'bread': 40, 'tools': 10, 'metal': 40, 'lumber': 10,}, firmNum);
+// The mint class actually isn't special. It will just not sell anything
+// I imagine this working as each coin being individually molded metal like a piece of art, with
+// very fine artwork making it valuable. Therefore, it will require metal and a large amount of food
+class Mint extends Firm {
+	constructor() {
+		super({'money': 400, 'bread': 40, 'tools': 10, 'metal': 40, 'lumber': 10,});
 
-		this.sell = {'money': 1}; //the mint does not sell anything, code doesnt understand.
+		this.sell = {'money': 1}; // sells 1 money for 1 money... might want to change later...
 
-		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 21}; /*it's upkeep fixed costs
-		I changed upkeep to work exactly like the others, with an interval commented, so you can
-		decide how to add it in */
+		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 21};
 
-		this.produceCost = {'bread':20, 'metal': 20};//what it takes for this firm to produce
-		/*in future there may be production substitutes, you can either have bread OR meat etc.
-		That will make the supply curve smoother as well*/
-		this.producedGoods = {'money': 40};//what this firm is producing
-    this.variance = [1, 5];
-	
-    this.expandRequirements = {'bread': 80, 'metal': 80};
-		this.expandReady = {'money': 600, 'bread': 80, 'tools': 20, 'metal': 80, 'lumber': 30}; //this code prevent firms from bankrupting themselves in expansion
-		this.expandCost = {'money': 400, 'bread': 40, 'tools': 10, 'metal': 40, 'lumber': 20};//what to decuct from inventory
+		this.produceCost = {'bread':20, 'metal': 20};
+		this.producedGoods = {'money': 40};
+		this.variance = 5;
 
+		this.expandRequirements = {'bread': 80, 'metal': 80};
+		this.expandReady = {'money': 600, 'bread': 80, 'tools': 20, 'metal': 80, 'lumber': 30};
+		this.expandCost = {'money': 400, 'bread': 40, 'tools': 10, 'metal': 40, 'lumber': 20};
 	}
 }
-
-
-/*TO DO:
-
-Add where firms buy from lowest price to highest
-Add firms buying in the proper ratio
-Add firms buying their fixed  (add to while loop if tic % 10 == 0 (ie is rent day)
-then try to buy your requirements, if you can't roll to die. Must watch if this results in
-price of lumber fluctuating wildly. (YOU ARE HERE)
-
-Add firms, upon reaching a point of wealth, buying their expansion requirements
-
-add expansion (reproduction), including a 'if this rich, start looking for expansion' item list
-
-add all of 'Bobby's firms'
-add graphs and other helpful ways to look at the data
-(end backend stuff ver 1.0)
-
-WHY-> the way we buy things, will we build up a reserve that will trigger the 'expandRequirement' conditions?
-Possibly, just needs to be tried.
-
-Savings are necisary so that a firm can pay rent, otherwise all of its money will be in product, and if it hasn't sold already it is unlikely to have any cash on hand.
-
-Going to need to adjust Buy-> wood 10, because apparently it is actually saying how much of what to buy for standard recources. Sigh.
-
-
-*/

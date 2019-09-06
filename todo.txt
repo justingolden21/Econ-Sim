@@ -1,14 +1,44 @@
-todo and ideas:
-logic for firm deciding when to not buy?
-	firm buying chooses lowest sell price?
-resources decay or go away over time? food?
-
+======== IDEAS ========
 LIMIT FOR HOW MUCH THEY CAN PRODUCE PER PRODUCTION AND HOW MUCH THEY CAN HOLD
 
-ideas for debugging:
-prices go to 1 so they dont deem it worth it to buy
-they cant pay upkeep cost because they sell it all
-they sell of all of their upkeep cost
+resources decay or go away over time? food?
 
+make seperate number called sellAvaialble for how much theyre willing to sell, remove reserve
 
-	make seperate number called sellAvaialble for how much theyre willing to sell
+ability to "own" multiple firms and trade among yourself "automatically"/afk
+
+======== NOTES ========
+in future there may be production substitutes, you can either have bread OR meat etc.
+That will make the supply curve smoother as well
+
+while we do not have money being added to the system through a 'Mint' firm, we need to have the money supply increase here
+by deducting less than we add.
+for the sake of simplicity, a firm will not need have any of what they produce to expand for now.
+if you think about it, you'll see why that's hard to program
+
+======== TODO ========
+
+Add where firms buy from lowest price to highest
+Add firms buying in the proper ratio
+Add firms buying their fixed (add to while loop if tic % 10 == 0 (ie is rent day)
+then try to buy your requirements, if you can't roll to die. Must watch if this results in
+price of lumber fluctuating wildly. (YOU ARE HERE)
+
+Add firms, upon reaching a point of wealth, buying their expansion requirements
+
+add expansion (reproduction), including a 'if this rich, start looking for expansion' item list
+
+add all of 'Bobby's firms'
+add graphs and other helpful ways to look at the data
+(end backend stuff ver 1.0)
+
+WHY-> the way we buy things, will we build up a reserve that will trigger the 'expandRequirement' conditions?
+Possibly, just needs to be tried.
+
+Savings are necessary so that a firm can pay rent, otherwise all of its money will be in product, and if it hasn't sold already it is unlikely to have any cash on hand.
+
+======== DEBUGGING NOTES ========
+things that might go wrong in game logic:
+	prices go to 1 so they dont deem it worth it to buy
+	they cant pay upkeep cost because they sell it all
+	they sell of all of their upkeep cost

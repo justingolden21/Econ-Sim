@@ -1,6 +1,6 @@
-/* TODO:
-sort sellers by resource sold, from cheapest to most expensive
-randomize order of buyers, then each one goes and updates its buy info, then buys that many
+/*
+sellers sorted by resource sold, from cheapest to most expensive
+order of buyers is randomized then each one buys as much as it wants
 */
 
 // enums
@@ -11,13 +11,13 @@ const FIRM_NUM = 2;
 function doTrades(firms) {
 	// create purchase costs object
 
-	// might increase sell size from 1 later
+	// might increase number of different goods a firm can sell from 1
 	let purchaseCosts = {};
 	for(firm in firms) {
 		let resource = Object.keys(firms[firm].sell)[0];
 		if(firms[firm].has(resource, 1) ) { // has resource it's selling
-			// add to purchaseCosts
 			if(purchaseCosts[resource]==undefined) {
+				// initiate empty array if doesn't exist
 				purchaseCosts[resource] = [];
 			}
 			// each resource is a key and the value is a sorted (will sort later)
@@ -35,20 +35,14 @@ function doTrades(firms) {
 		purchaseCosts[resource].sort( (a,b)=> {
 			return Math.random() > 0.5 ? 1 : -1;
 		});
-		// sort each resource in obj by its cost
+		// sort each resource in obj by its price low to high
 		purchaseCosts[resource].sort( (a,b)=> {
-			// cost is element at idx 0
-			return a[0]-b[0];
+			return a[PRICE]-b[PRICE];
 		});
 	}
 	// console.log(purchaseCosts);
 
-	// note: if purchaseCosts is decreasing probably isn't bug in buy scripts editing it
-	// but because all the firms are going bankrupt
-	// might also be buy script though
-
 	// loop through buyers in random order
-	// let them update their buy info and then make purchases
 	let buyerIdxs = [...Array(firms.length).keys()]; // list of nums 0 to n-1
 	shuffle(buyerIdxs);
 	for(let i = 0; i < buyerIdxs.length; i++) {
@@ -56,7 +50,6 @@ function doTrades(firms) {
 		doBuy(buyer, purchaseCosts);
 	}
 }
-
 
 function doTrade(seller, buyer, resource, amount) {
 	let price = seller.sell[resource];
@@ -68,6 +61,7 @@ function doTrade(seller, buyer, resource, amount) {
 	buyer.give(seller, 'money', price*amount);
 
 	seller.prevAmountSold += amount;
+	activity += amount;
 
 	return true;
 }
