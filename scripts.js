@@ -110,7 +110,7 @@ class Firm {
 			this.pay(resource, this.produceCost[resource]);
 		}
 		let amountProduced = this.producedGoods[Object.keys(this.producedGoods)[0] ] + random(this.variance[0], this.variance[1]);
-		amountProduced *= 1 + 0.1*this.efficiency;
+		amountProduced *= 0.95 + 0.1*this.efficiency;
 		amountProduced = Math.round(amountProduced);
 		this.get(Object.keys(this.producedGoods)[0], amountProduced);
 		this.prevAmountProduced = amountProduced;
