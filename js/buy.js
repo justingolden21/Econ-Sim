@@ -56,10 +56,6 @@ function buyResources(firm, purchaseCosts, resources, message) {
 			let seller = AIs[resourceInfo[FIRM_NUM] ];
 
 			if(message=='expand') {
-			// if(firm.type()=='smith' && message=='expand') {
-				// if(Object.keys(resources)[0] != 'bread') {
-					console.log(resources);
-				// }
 				// params for this func, and args passed to doTrade
 				// console.log(firm.str(), purchaseCosts, resources); // very fuckin useful console logs
 				// console.log(seller.str(), firm.str(), resource, tmpAmountToBuy); // very fuckin useful console logs				
@@ -98,6 +94,9 @@ function doBuy(firm, purchaseCosts) {
 		else {
 			buyResources(firm, purchaseCosts, firm.expandReady, 'expand');
 		}
+
+
+		return; //todo remove this
 
 	}
 
