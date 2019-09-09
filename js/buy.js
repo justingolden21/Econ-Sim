@@ -4,6 +4,8 @@ function buyResources(firm, purchaseCosts, resources) {
 		// how much they need
 		let amountToBuy = firm.inventory[resource] - resources[resource];
 
+		if(resource=='money') continue;
+
 		amountToBuy = Math.max(amountToBuy, 0);
 		if(amountToBuy==0) {
 			break;

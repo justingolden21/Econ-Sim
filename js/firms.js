@@ -57,7 +57,7 @@ class Forester extends Firm {
 		this.variance = 5;
 
 		this.expandRequirement = {'bread': 80, 'tools': 30};
-		this.expandReady = {'money': 500, 'bread': 80, 'tools': 30};
+		this.expandReady = {'money': 500, 'bread': 100, 'tools': 50, 'metal': 1};
 		this.expandCost = {'money': 300, 'bread': 30, 'tools': 10};
 	}
 }
