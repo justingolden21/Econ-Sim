@@ -43,6 +43,8 @@ class Firm {
 
 		this.prevAmountProduced = 0;
 		this.prevAmountSold = 0;
+
+		this.forSale = 0;
 	}
 	tick() {
 		if(this.bankrupt) return;

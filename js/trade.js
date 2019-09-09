@@ -24,6 +24,7 @@ function doTrades(firms) {
 			// list of the resource's cost, amount available, and firm number
 			let tmp = [];
 			tmp[PRICE] = firms[firm].sell[resource];
+			// tmp[AVAILABLE] = firms[firm].inventory[resource];
 			tmp[AVAILABLE] = firms[firm].forSale;
 			tmp[FIRM_NUM] = firms[firm].firmNum;
 			purchaseCosts[resource].push(tmp);
