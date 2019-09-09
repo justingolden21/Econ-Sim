@@ -35,7 +35,7 @@ function display(firms) {
 		avgPrices[sellResource].sum += firms[firm].sell[sellResource];
 		avgPrices[sellResource].count++;
 	}
-	console.log(avgPrices);
+
 	document.getElementById('display').innerHTML = tmpHTML;
 
 	tmpHTML = 'Prices: ';
