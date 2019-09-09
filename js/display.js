@@ -2,6 +2,7 @@ function display(firms) {
 	let tmpHTML = '';
 
 	let avgPrices = {};
+	let firmsTryingToExpand = 0;
 
 	for(firm in firms) {
 		tmpHTML += '<div class="col-sm-6 col-md-4">'
@@ -16,8 +17,13 @@ function display(firms) {
 		// 	tmpHTML += item + ': ' + firms[firm].reserve[item] + 
 		// 	'<div class="progressbar" style="width:' + Math.min(firms[firm].reserve[item]/10,200) + 'px;"></div>';
 		// }
+
+		let tryingToExpand = firms[firm].hasExpand();
+		if(tryingToExpand) {
+			firmsTryingToExpand++;
+		}
 		tmpHTML += '<hr>Efficiency: ' + round(firms[firm].efficiency);
-		tmpHTML += '<br>Trying to Expand: ' + firms[firm].hasExpand();
+		tmpHTML += '<br>Trying to Expand: ' + tryingToExpand;
 		tmpHTML += '<br>Times Expanded: ' + firms[firm].timesExpanded;
 		tmpHTML += '<hr>Sell Price: ' + firms[firm].sell[Object.keys(firms[firm].sell)[0] ];
 		tmpHTML += '<br>For Sale: ' + firms[firm].forSale;
@@ -48,6 +54,7 @@ function display(firms) {
 	document.getElementById('firms').innerHTML = AIs.length;
 	document.getElementById('activity').innerHTML = activity +
 		' <i class="fas fa-arrow-' + (activity > prevActivity ? 'up' : 'down') + '"></i>';
+	document.getElementById('expand').innerHTML = firmsTryingToExpand + ' / ' + AIs.length;
 
 
 	let totalInventory = {};
