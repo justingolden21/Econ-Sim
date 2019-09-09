@@ -16,6 +16,8 @@ by deducting less than we add.
 for the sake of simplicity, a firm will not need have any of what they produce to expand for now.
 if you think about it, you'll see why that's hard to program
 
+want firms to start with money (so they can purchase) however dont want to add money to economy through making new firms. needs to get money from parent, but then money is expand cost
+
 ======== TODO ========
 
 Add where firms buy from lowest price to highest

@@ -45,6 +45,7 @@ class Firm {
 		this.prevAmountSold = 0;
 
 		this.forSale = 0;
+		this.moneyToSave = 0;
 	}
 	tick() {
 		if(this.bankrupt) return;
@@ -58,6 +59,13 @@ class Firm {
 			this.payAll(this.expandCost);
 			newFirm(this.type() );
 			console.log('I had a baby! It\'s a ' + this.type() );
+		}
+		// it should already have all other resources in expandReady before saving money
+		// money is last step
+		if(this.hasAll(this.expandRequirement) && this.hasAll(this.expandReady) ) {
+			this.moneyToSave = this.expandReady['money'] || 0;
+		} else {
+			this.moneyToSave = 0;
 		}
 	}
 	payUpkeep() {
@@ -93,7 +101,7 @@ class Firm {
 		// can edit function so seller prefers to not sell and save resources for later
 		let sellResource = Object.keys(this.sell)[0];
 		// console.log(this.prevAmountProduced, this.prevAmountSold);
-		if(this.prevAmountProduced > this.prevAmountSold) { // produced more than sold
+		if(this.prevAmountProduced >= this.prevAmountSold) { // produced more than sold
 			this.sell[sellResource] -= 1;
 			//console.log("I sold!");
 		} else {
@@ -103,6 +111,13 @@ class Firm {
 		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
 
 		this.forSale = this.inventory[sellResource] - (this.upkeepCost[sellResource] || 0);
+		if(this.hasExpand() ) {
+			// save expand resource if preparing for expand
+			if(this.expandReady[sellResource]) {
+				this.forSale -= this.expandReady[sellResource];
+			}
+		}
+		this.forSale = Math.max(this.forSale, 0);
 	}
 	give(firm, resource, amount) {
 		firm.inventory[resource] += amount;
@@ -120,7 +135,7 @@ class Firm {
 		return true;
 	}
 	hasExpand() {
-		return this.hasAll(this.expandRequirements);
+		return this.hasAll(this.expandRequirement);
 	}
 	hasUpkeep() {
 		return this.hasAll(this.upkeepCost);
@@ -154,9 +169,12 @@ function start() {
 }
 
 // can be called with firm type, if not random firm type
+const MAX_FIRMS = 200;
 function newFirm(firmType) {
+	if(currentFirmNum>=MAX_FIRMS)
+		return false;
 	if(!firmType) 
-		firmType = 'mine smith forester farm mill mill mill baker refinery mint'.split(' ')[random(0,9)];
+		firmType = 'mine smith forester farm mill baker refinery mint'.split(' ')[random(0,7)];
 
 	if(firmType == 'forester')
 		AIs[currentFirmNum] = new Forester();
@@ -228,4 +246,46 @@ function normal() {
 function normal01() {
 	let tmp = 0.33*normal()+0.5;
 	return tmp < 0 ? 0 : tmp > 1 ? 1 : tmp;
+}
+
+function print(str) {
+	console.log('Tick:', ticks, '-', str);
+}
+
+// note: currently unused. remove this comment when used
+function subtractResources(resources1, resources2) {
+	let rtn = {};
+
+	// input checking
+	for(resource in resources2) {
+		if(!(resource in resources1) ) {
+			console.error('Attempt to subtract resources that don\'t exist');
+			console.error(resources1);
+			console.error(resources2);
+		}
+	}
+
+	for(resource in resources1) {
+		if(resource in resources2) {
+			rtn[resource] = resources1[resource] - resources2[resource];			
+		}
+		else {
+			rtn[resource] = resources1[resource];
+		}
+	}
+	return rtn;
+}
+function subtractAllFrom(resourceName, resources) {
+	// note: returns a copy
+	// note: if resourceName isn't in resources, no worries, just returns copy of resources
+	let rtn = {};
+	for(resource in resources) {
+		if(resource==resourceName) {
+			rtn[resource] = 0;
+		}
+		else {
+			rtn[resource] = resources[resource];
+		}
+	}
+	return rtn;
 }

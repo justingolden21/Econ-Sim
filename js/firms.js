@@ -1,4 +1,6 @@
 // note: currently none of the upkeep costs are things that they sell
+// note: expandReady must be > expandCost
+// start money and expandCost money should be equal
 class Mine extends Firm {
 	constructor() {
 		super({'money':400, 'bread':40, 'tools':40}); // starting inventory
@@ -91,7 +93,7 @@ class Mill extends Firm {
 		this.upkeepInterval = 10;
 
 		this.produceCost = {'wheat': 200, 'bread':10};
-		this.producedGoods = {'flour': 100};
+		this.producedGoods = {'flour': 150};
 		this.variance = 25;
 
 		this.expandRequirement = {'bread': 50, 'wheat': 1000};
@@ -114,8 +116,10 @@ class Baker extends Firm {
 		this.variance = 20;
 
 		this.expandRequirement = {'flour': 120, 'lumber': 10};
+		// this.expandReady = {'money': 500, 'bread': 50, 'tools': 20, 'lumber': 30};
 		this.expandReady = {'money': 500, 'bread': 50, 'tools': 20, 'lumber': 30};
-		this.expandCost = {'money': 200, 'bread': 30, 'tools': 10, 'lumber': 20};
+		this.expandCost = {'money': 200, 'lumber': 20};
+		// this.expandCost = {'money': 200, 'bread': 30, 'tools': 10, 'lumber': 20};
 	}
 }
 

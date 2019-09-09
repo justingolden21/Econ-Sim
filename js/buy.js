@@ -1,3 +1,17 @@
+/* Notes:
+if firm is otherwise ready to expand, they save money equal to expandReady
+
+doesn't buy a resource it produces for expansion
+	code is in check for "firm.hasExpand()" in doBuy() below
+doesn't sell resource it produces equal to amount necessary for expansion
+	code is in adjust() in Firm class in main.js
+
+make sure they don't lose expandRequirement
+could lose it if it's:
+1. money they spend
+2. good they sell
+3. used in upkeep cost
+*/
 function buyResources(firm, purchaseCosts, resources) {
 	// buys as many of resources as possible
 	for(resource in resources) {
@@ -18,7 +32,8 @@ function buyResources(firm, purchaseCosts, resources) {
 			let resourceInfo = purchaseCosts[resource][0];
 
 			let resourceAvailable = resourceInfo[AVAILABLE];
-			let canAfford = Math.floor(firm.inventory['money'] / resourceInfo[PRICE]);
+			let moneyAvailable = Math.max(firm.inventory['money']-firm.moneyToSave, 0);
+			let canAfford = Math.floor(moneyAvailable / resourceInfo[PRICE]);
 
 			// min of how much firm needs, how much is available, and how much firm can afford
 			let tmpAmountToBuy = Math.min(amountToBuy, resourceAvailable);
@@ -33,7 +48,9 @@ function buyResources(firm, purchaseCosts, resources) {
 
 			let seller = AIs[resourceInfo[FIRM_NUM] ];
 			// seller, buyer, resource, amount
+			// console.log(seller, firm, resource, tmpAmountToBuy);
 			doTrade(seller, firm, resource, tmpAmountToBuy);
+			// console.log(firm.type(), 'tradin for them', resource);
 
 			purchaseCosts[resource][0][AVAILABLE] -= tmpAmountToBuy;
 			if(purchaseCosts[resource][0][AVAILABLE]==0) {
@@ -49,7 +66,17 @@ function doBuy(firm, purchaseCosts) {
 		buyResources(firm, purchaseCosts, firm.upkeepCost);
 	}
 	if(firm.hasExpand() ) {
-		buyResources(firm, purchaseCosts, firm.expandReady);
+		// console.log('tryin to expand a', firm.type() );
+
+		// note: doesn't attempt to buy resource it produces
+		let sellResource = Object.keys(firm.sell)[0];
+		if(sellResource in firm.expandReady) {
+			buyResources(firm, purchaseCosts, subtractAllFrom(sellResource, firm.expandReady) );
+		}
+		else {
+			buyResources(firm, purchaseCosts, firm.expandReady);
+		}
+
 	}
 
 	let input1 = Object.keys(firm.produceCost)[0];
@@ -76,7 +103,8 @@ function doBuy(firm, purchaseCosts) {
 		let costPerProduce = input1produceCost * input1cost + input2produceCost * input2cost;
 
 		// if don't have money to produce once
-		if(firm.inventory['money'] < costPerProduce) {
+		let moneyAvailable = Math.max(firm.inventory['money']-firm.moneyToSave, 0);
+		if(moneyAvailable < costPerProduce) {
 			return;
 		}
 		// if not worth if to produce
@@ -86,7 +114,7 @@ function doBuy(firm, purchaseCosts) {
 			// return;
 		}
 
-		let amountCanProduce = Math.floor(firm.inventory['money'] / costPerProduce);
+		let amountCanProduce = Math.floor(moneyAvailable / costPerProduce);
 
 		// let seller1Num = input1purchaseCosts[input1Idx][2]; // firm num
 		let seller1Num = input1purchaseCosts[0][FIRM_NUM];
