@@ -58,7 +58,7 @@ class Firm {
 		this.doProduction();
 		if(this.hasAll(this.expandReady) ) {
 			this.payAll(this.expandCost);
-			newFirm(this.type() );
+			newFirm(this.type(), this.sell[Object.keys(this.sell)[0] ]); // type and sell price
 			console.log('I had a baby! It\'s a ' + this.type() );
 			this.timesExpanded++;
 		}
@@ -175,28 +175,28 @@ function start() {
 
 // can be called with firm type, if not random firm type
 const MAX_FIRMS = 200;
-function newFirm(firmType) {
+function newFirm(firmType, sellPrice=10) {
 	if(currentFirmNum>=MAX_FIRMS)
 		return false;
 	if(!firmType) 
 		firmType = 'mine smith forester farm mill baker refinery mint'.split(' ')[random(0,7)];
 
 	if(firmType == 'forester')
-		AIs[currentFirmNum] = new Forester();
+		AIs[currentFirmNum] = new Forester(sellPrice);
 	else if(firmType == 'smith')
-		AIs[currentFirmNum] = new Smith();
+		AIs[currentFirmNum] = new Smith(sellPrice);
 	else if(firmType == 'farm')
-		AIs[currentFirmNum] = new Farm();
+		AIs[currentFirmNum] = new Farm(sellPrice);
 	else if(firmType == 'mine')
-		AIs[currentFirmNum] = new Mine();
+		AIs[currentFirmNum] = new Mine(sellPrice);
 	else if(firmType == 'mint')
-		AIs[currentFirmNum] = new Mint();
+		AIs[currentFirmNum] = new Mint(sellPrice);
 	else if(firmType == 'baker')
-		AIs[currentFirmNum] = new Baker();
+		AIs[currentFirmNum] = new Baker(sellPrice);
 	else if(firmType == 'refinery')
-		AIs[currentFirmNum] = new Refinery();
+		AIs[currentFirmNum] = new Refinery(sellPrice);
 	else
-		AIs[currentFirmNum] = new Mill();
+		AIs[currentFirmNum] = new Mill(sellPrice);
 }
 
 //  tick stuff

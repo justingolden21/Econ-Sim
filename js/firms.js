@@ -2,10 +2,10 @@
 // note: expandReady must be > expandCost
 // start money and expandCost money should be equal
 class Mine extends Firm {
-	constructor() {
+	constructor(sellPrice) {
 		super({'money':400, 'bread':40, 'tools':40}); // starting inventory
 
-		this.sell = {'ore': 10}; // resource sold and its price
+		this.sell = {'ore': sellPrice}; // resource sold and its price
 
 		this.upkeepCost = {'tools': 10};
 		this.upkeepInterval = 19;
@@ -27,10 +27,10 @@ class Mine extends Firm {
 }
 
 class Smith extends Firm {
-	constructor() {
+	constructor(sellPrice) {
 		super({'money': 300, 'metal': 20, 'lumber': 20});
 
-		this.sell = {'tools': 10};
+		this.sell = {'tools': sellPrice};
 
 		this.upkeepCost = {'bread': 10};
 		this.upkeepInterval = 9;
@@ -46,10 +46,10 @@ class Smith extends Firm {
 }
 
 class Forester extends Firm {
-	constructor() {
+	constructor(sellPrice) {
 		super({'money': 300, 'bread': 20, 'tools': 10});
 
-		this.sell = {'lumber': 10};
+		this.sell = {'lumber': sellPrice};
 
 		this.upkeepCost = {'bread': 10, 'tools':1};
 		this.upkeepInterval = 12;
@@ -65,10 +65,10 @@ class Forester extends Firm {
 }
 
 class Farm extends Firm {
-	constructor() {
+	constructor(sellPrice) {
 		super({'money': 200, 'bread': 20, 'tools': 10});
 
-		this.sell = {'wheat': 10};
+		this.sell = {'wheat': sellPrice};
 
 		this.upkeepCost = { 'bread': 10, 'tools':2};
 		this.upkeepInterval = 17;
@@ -84,10 +84,10 @@ class Farm extends Firm {
 }
 
 class Mill extends Firm {
-	constructor() {
+	constructor(sellPrice) {
 		super({'money': 200, 'bread': 20, 'wheat': 500, 'tools': 10});
 		
-		this.sell = {'flour': 10};
+		this.sell = {'flour': sellPrice};
 
 		this.upkeepCost = {'bread': 10, 'tools':2};
 		this.upkeepInterval = 10;
@@ -103,10 +103,10 @@ class Mill extends Firm {
 }
 
 class Baker extends Firm {
-	constructor() {
+	constructor(sellPrice) {
 		super({'money': 200, 'bread': 20, 'tools': 10, 'lumber': 6});
 
-		this.sell = {'bread': 10};
+		this.sell = {'bread': sellPrice};
 
 		this.upkeepCost = {'lumber': 2, 'tools':2};
 		this.upkeepInterval = 18;
@@ -124,10 +124,10 @@ class Baker extends Firm {
 }
 
 class Refinery extends Firm {
-	constructor() {
+	constructor(sellPrice) {
 		super({'money': 300, 'bread': 30, 'tools': 5, 'ore': 80, 'lumber': 10,});
 
-		this.sell = {'metal': 10};
+		this.sell = {'metal': sellPrice};
 
 		this.upkeepCost = {'lumber': 2, 'tools':2};
 		this.upkeepInterval = 14;
@@ -146,7 +146,7 @@ class Refinery extends Firm {
 // I imagine this working as each coin being individually molded metal like a piece of art, with
 // very fine artwork making it valuable. Therefore, it will require metal and a large amount of food
 class Mint extends Firm {
-	constructor() {
+	constructor(sellPrice) {
 		super({'money': 400, 'bread': 40, 'tools': 10, 'metal': 40, 'lumber': 10,});
 
 		this.sell = {'money': 1}; // sells 1 money for 1 money... might want to change later...
