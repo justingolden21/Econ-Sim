@@ -12,15 +12,20 @@ could lose it if it's:
 2. good they sell
 3. used in upkeep cost
 */
-function buyResources(firm, purchaseCosts, resources) {
+function buyResources(firm, purchaseCosts, resources, message) {
+	// if(message=='expand') {
+	// 	console.log(firm.type() );
+	// 	console.log(firm.firmNum );
+	// 	console.log(purchaseCosts);
+	// 	console.log(resources);
+	// }
+
 	// buys as many of resources as possible
 	for(resource in resources) {
-		// how much they need
-		let amountToBuy = firm.inventory[resource] - resources[resource];
-
 		if(resource=='money') continue;
 
-		amountToBuy = Math.max(amountToBuy, 0);
+		// how much they need
+		let amountToBuy = Math.max(resources[resource] - firm.inventory[resource], 0);
 		if(amountToBuy==0) {
 			break;
 		}
@@ -28,6 +33,8 @@ function buyResources(firm, purchaseCosts, resources) {
 		// loop through each seller of resource
 		if(!purchaseCosts[resource]) return;
 		while(purchaseCosts[resource].length > 0) {
+
+			amountToBuy = Math.max(resources[resource] - firm.inventory[resource], 0);
 
 			let resourceInfo = purchaseCosts[resource][0];
 
@@ -47,9 +54,22 @@ function buyResources(firm, purchaseCosts, resources) {
 			// buy tmpAmountToBuy
 
 			let seller = AIs[resourceInfo[FIRM_NUM] ];
+
+			if(message=='expand') {
+			// if(firm.type()=='smith' && message=='expand') {
+				// if(Object.keys(resources)[0] != 'bread') {
+					console.log(resources);
+				// }
+				// params for this func, and args passed to doTrade
+				// console.log(firm.str(), purchaseCosts, resources); // very fuckin useful console logs
+				// console.log(seller.str(), firm.str(), resource, tmpAmountToBuy); // very fuckin useful console logs				
+			}
+
 			// seller, buyer, resource, amount
-			// console.log(seller, firm, resource, tmpAmountToBuy);
 			doTrade(seller, firm, resource, tmpAmountToBuy);
+			
+			// below line commented because we already (should) account for the resources we've aquired
+			// resources[resource] -= tmpAmountToBuy; // update our parameter so we don't keep buying
 			// console.log(firm.type(), 'tradin for them', resource);
 
 			purchaseCosts[resource][0][AVAILABLE] -= tmpAmountToBuy;
@@ -62,19 +82,21 @@ function buyResources(firm, purchaseCosts, resources) {
 	}
 }
 function doBuy(firm, purchaseCosts) {
+	// if(false) {
 	if(!firm.hasUpkeep() ) {
-		buyResources(firm, purchaseCosts, firm.upkeepCost);
+		buyResources(firm, purchaseCosts, firm.upkeepCost, 'upkeep');
 	}
+	// if(false) {
 	if(firm.hasExpand() ) {
 		// console.log('tryin to expand a', firm.type() );
 
 		// note: doesn't attempt to buy resource it produces
 		let sellResource = Object.keys(firm.sell)[0];
 		if(sellResource in firm.expandReady) {
-			buyResources(firm, purchaseCosts, subtractAllFrom(sellResource, firm.expandReady) );
+			buyResources(firm, purchaseCosts, subtractAllFrom(sellResource, firm.expandReady), 'expand');
 		}
 		else {
-			buyResources(firm, purchaseCosts, firm.expandReady);
+			buyResources(firm, purchaseCosts, firm.expandReady, 'expand');
 		}
 
 	}

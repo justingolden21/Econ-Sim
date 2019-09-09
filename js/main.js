@@ -46,6 +46,7 @@ class Firm {
 
 		this.forSale = 0;
 		this.moneyToSave = 0;
+		this.timesExpanded = 0;
 	}
 	tick() {
 		if(this.bankrupt) return;
@@ -59,6 +60,7 @@ class Firm {
 			this.payAll(this.expandCost);
 			newFirm(this.type() );
 			console.log('I had a baby! It\'s a ' + this.type() );
+			this.timesExpanded++;
 		}
 		// it should already have all other resources in expandReady before saving money
 		// money is last step
@@ -154,6 +156,9 @@ class Firm {
 	}
 	type() {
 		return this.constructor.name.toLowerCase();
+	}
+	str() {
+		return this.type() + '#' + this.firmNum;
 	}
 }
 

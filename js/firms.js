@@ -40,7 +40,7 @@ class Smith extends Firm {
 		this.variance = 10;
 		
 		this.expandRequirement = {'metal': 60, 'lumber': 60};
-		this.expandReady = {'money': 600, 'metal': 60, 'lumber': 60};
+		this.expandReady = {'money': 600, 'metal': 60, 'lumber': 60, 'flour': 1};
 		this.expandCost = {'money': 300, 'metal': 20, 'lumber': 20};
 	}
 }
@@ -59,7 +59,7 @@ class Forester extends Firm {
 		this.variance = 5;
 
 		this.expandRequirement = {'bread': 80, 'tools': 30};
-		this.expandReady = {'money': 500, 'bread': 100, 'tools': 50, 'metal': 1};
+		this.expandReady = {'money': 500, 'bread': 100, 'tools': 50, 'flour': 1};
 		this.expandCost = {'money': 300, 'bread': 30, 'tools': 10};
 	}
 }

@@ -14,8 +14,12 @@ function display(firms) {
 		// 	tmpHTML += item + ': ' + firms[firm].reserve[item] + 
 		// 	'<div class="progressbar" style="width:' + Math.min(firms[firm].reserve[item]/10,200) + 'px;"></div>';
 		// }
-		tmpHTML += '<hr>Efficiency: ' + round(firms[firm].efficiency, 3) + '<br>';
-		tmpHTML += 'Sell Price: ' + firms[firm].sell[Object.keys(firms[firm].sell)[0] ];
+		tmpHTML += '<hr>Efficiency: ' + round(firms[firm].efficiency, 3);
+		tmpHTML += '<br>Trying to Expand: ' + firms[firm].hasExpand();
+		tmpHTML += '<br>Times Expanded: ' + firms[firm].timesExpanded;
+		tmpHTML += '<hr>Sell Price: ' + firms[firm].sell[Object.keys(firms[firm].sell)[0] ];
+		tmpHTML += '<br>For Sale: ' + firms[firm].forSale;
+		tmpHTML += '<br>Money To Save: ' + firms[firm].moneyToSave;
 		tmpHTML += '</div>';
 	}
 
