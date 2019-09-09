@@ -7,6 +7,8 @@ make seperate number called sellAvaialble for how much theyre willing to sell, r
 
 ability to "own" multiple firms and trade among yourself "automatically"/afk
 
+parent passes their price to child
+
 ======== NOTES ========
 in future there may be production substitutes, you can either have bread OR meat etc.
 That will make the supply curve smoother as well
