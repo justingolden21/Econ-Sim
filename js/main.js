@@ -100,7 +100,7 @@ class Firm {
 		}
 		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
 
-		// this.forSale = this.inventory[sellResource] - (this.upkeep[sellResource] || 0);
+		this.forSale = this.inventory[sellResource] - (this.upkeepCost[sellResource] || 0);
 	}
 	give(firm, resource, amount) {
 		firm.inventory[resource] += amount;

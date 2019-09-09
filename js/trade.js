@@ -24,7 +24,7 @@ function doTrades(firms) {
 			// list of the resource's cost, amount available, and firm number
 			let tmp = [];
 			tmp[PRICE] = firms[firm].sell[resource];
-			tmp[AVAILABLE] = firms[firm].inventory[resource];
+			tmp[AVAILABLE] = firms[firm].forSale;
 			tmp[FIRM_NUM] = firms[firm].firmNum;
 			purchaseCosts[resource].push(tmp);
 		}
@@ -63,5 +63,6 @@ function doTrade(seller, buyer, resource, amount) {
 	seller.prevAmountSold += amount;
 	activity += amount;
 
+	// console.log('traded', seller, buyer, resource, amount);
 	return true;
 }
