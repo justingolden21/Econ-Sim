@@ -48,20 +48,22 @@ class Firm {
 		if(this.bankrupt) return;
 		this.prevAmountSold = 0;
 		this.ticks++;
-		if(this.ticks % this.upkeep['interval'] == 0) {
+		if(this.ticks % this.upkeepInterval == 0) {
 			this.payUpkeep();
 		}
 		this.doProduction();
+		if(this.hasAll(this.expandReady) ) {
+			this.payAll(this.expandCost);
+			newFirm(this.type() );
+			console.log('I had a baby! It\'s a ' + this.type() );
+		}
 	}
 	payUpkeep() {
-		for(item in this.upkeep) {
-			if(item=='interval') continue;
-			if(this.has(item, this.upkeep[item]) ) {
-				this.pay(item, this.upkeep[item]);
-			}
-			else {
-				// this.bankrupt = true;
-			}
+		if(this.hasUpkeep() ) {
+			this.payAll(this.upkeepCost);
+		}
+		else {
+			// this.bankrupt = true;
 		}
 	}
 	doProduction() {
@@ -107,14 +109,34 @@ class Firm {
 	has(resource, amount) {
 		return this.inventory[resource] >= amount;
 	}
+	hasAll(resources) {
+		for(let resource in resources) {
+			if(this.inventory[resource] < resources[resource]) {
+				return false;
+			}
+		}
+		return true;
+	}
+	hasExpand() {
+		return this.hasAll(this.expandRequirements);
+	}
+	hasUpkeep() {
+		return this.hasAll(this.upkeepCost);
+	}
 	pay(resource, amount) {
 		this.inventory[resource] -= amount;
+	}
+	payAll(resources) {
+		// assumes they have enough. check with hasAll()
+		for(resource in resources) {
+			this.inventory[resource] -= resources[resource];
+		}
 	}
 	get(resource, amount) {
 		this.inventory[resource] += amount;
 	}
 	type() {
-		return this.constructor.name;
+		return this.constructor.name.toLowerCase();
 	}
 }
 
@@ -131,22 +153,22 @@ function start() {
 
 // can be called with firm type, if not random firm type
 function newFirm(firmType) {
-	if(!firmType)
-		firmType = random(1,12);
+	if(!firmType) 
+		firmType = 'mine smith forester farm mill mill mill baker refinery mint'.split(' ')[random(0,9)];
 
-	if(firmType == 2)
+	if(firmType == 'forester')
 		AIs[currentFirmNum] = new Forester();
-	else if(firmType == 3)
+	else if(firmType == 'smith')
 		AIs[currentFirmNum] = new Smith();
-	else if(firmType == 4)
+	else if(firmType == 'farm')
 		AIs[currentFirmNum] = new Farm();
-	else if(firmType == 5)
+	else if(firmType == 'mine')
 		AIs[currentFirmNum] = new Mine();
-	else if(firmType == 6)
+	else if(firmType == 'mint')
 		AIs[currentFirmNum] = new Mint();
-	else if(firmType == 7)
+	else if(firmType == 'baker')
 		AIs[currentFirmNum] = new Baker();
-	else if(firmType == 8)
+	else if(firmType == 'refinery')
 		AIs[currentFirmNum] = new Refinery();
 	else
 		AIs[currentFirmNum] = new Mill();

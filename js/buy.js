@@ -1,5 +1,55 @@
-// todo: if worth producing
+function buyResources(firm, purchaseCosts, resources) {
+	// buys as many of resources as possible
+	for(resource in resources) {
+		// how much they need
+		let amountToBuy = firm.inventory[resource] - resources[resource];
+
+		amountToBuy = Math.max(amountToBuy, 0);
+		if(amountToBuy==0) {
+			break;
+		}
+
+		// loop through each seller of resource
+		if(!purchaseCosts[resource]) return;
+		while(purchaseCosts[resource].length > 0) {
+
+			let resourceInfo = purchaseCosts[resource][0];
+
+			let resourceAvailable = resourceInfo[AVAILABLE];
+			let canAfford = Math.floor(firm.inventory['money'] / resourceInfo[PRICE]);
+
+			// min of how much firm needs, how much is available, and how much firm can afford
+			let tmpAmountToBuy = Math.min(amountToBuy, resourceAvailable);
+			tmpAmountToBuy = Math.min(tmpAmountToBuy, canAfford);
+
+			// takes into account running out of money or not wanting any more
+			if(tmpAmountToBuy == 0) {
+				break;
+			}
+
+			// buy tmpAmountToBuy
+
+			let seller = AIs[resourceInfo[FIRM_NUM] ];
+			// seller, buyer, resource, amount
+			doTrade(seller, firm, resource, tmpAmountToBuy);
+
+			purchaseCosts[resource][0][AVAILABLE] -= tmpAmountToBuy;
+			if(purchaseCosts[resource][0][AVAILABLE]==0) {
+				purchaseCosts[resource].splice(0,1); // remove first elm
+			}
+
+		}
+
+	}
+}
 function doBuy(firm, purchaseCosts) {
+	if(!firm.hasUpkeep() ) {
+		buyResources(firm, purchaseCosts, firm.upkeepCost);
+	}
+	if(firm.hasExpand() ) {
+		buyResources(firm, purchaseCosts, firm.expandReady);
+	}
+
 	let input1 = Object.keys(firm.produceCost)[0];
 	let input2 = Object.keys(firm.produceCost)[1];
 
@@ -31,7 +81,7 @@ function doBuy(firm, purchaseCosts) {
 		let sellPrice = firm.sell[Object.keys(firm.sell)[0] ];
 		let amountProduced = Object.values(firm.producedGoods)[0];
 		if(costPerProduce > 2*sellPrice*amountProduced) { // if losing more than 2x as much
-			return;
+			// return;
 		}
 
 		let amountCanProduce = Math.floor(firm.inventory['money'] / costPerProduce);

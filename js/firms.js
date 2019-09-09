@@ -5,7 +5,8 @@ class Mine extends Firm {
 
 		this.sell = {'ore': 10}; // resource sold and its price
 
-		this.upkeep = {'tools': 10, 'interval': 19};
+		this.upkeepCost = {'tools': 10};
+		this.upkeepInterval = 19;
 
 		this.produceCost = {'bread': 30, 'tools': 10}; // what it takes for this to produce
 		this.producedGoods = {'ore': 100}; // what this is producing
@@ -29,7 +30,8 @@ class Smith extends Firm {
 
 		this.sell = {'tools': 10};
 
-		this.upkeep = { 'bread': 10, 'interval': 9};
+		this.upkeepCost = {'bread': 10};
+		this.upkeepInterval = 9;
 
 		this.produceCost = {'metal': 10, 'lumber': 10};
 		this.producedGoods = {'tools': 20};
@@ -47,7 +49,8 @@ class Forester extends Firm {
 
 		this.sell = {'lumber': 10};
 
-		this.upkeep = { 'bread': 10, 'tools':1, 'interval': 12};
+		this.upkeepCost = {'bread': 10, 'tools':1};
+		this.upkeepInterval = 12;
 
 		this.produceCost = {'bread': 10, 'tools': 5};
 		this.producedGoods = {'lumber': 10 };
@@ -65,7 +68,8 @@ class Farm extends Firm {
 
 		this.sell = {'wheat': 10};
 
-		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 17};
+		this.upkeepCost = { 'bread': 10, 'tools':2};
+		this.upkeepInterval = 17;
 
 		this.produceCost = {'bread': 10, 'tools': 2};
 		this.producedGoods = {'wheat': 300};
@@ -83,7 +87,8 @@ class Mill extends Firm {
 		
 		this.sell = {'flour': 10};
 
-		this.upkeep = { 'bread': 10, 'tools':2, 'interval': 10};
+		this.upkeepCost = {'bread': 10, 'tools':2};
+		this.upkeepInterval = 10;
 
 		this.produceCost = {'wheat': 200, 'bread':10};
 		this.producedGoods = {'flour': 100};
@@ -101,13 +106,14 @@ class Baker extends Firm {
 
 		this.sell = {'bread': 10};
 
-		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 18};
+		this.upkeepCost = {'lumber': 2, 'tools':2};
+		this.upkeepInterval = 18;
 
 		this.produceCost = {'flour': 40, 'lumber': 2};
 		this.producedGoods = {'bread': 100};
 		this.variance = 20;
 
-		this.expandRequirements = {'flour': 120, 'lumber': 10};
+		this.expandRequirement = {'flour': 120, 'lumber': 10};
 		this.expandReady = {'money': 500, 'bread': 50, 'tools': 20, 'lumber': 30};
 		this.expandCost = {'money': 200, 'bread': 30, 'tools': 10, 'lumber': 20};
 	}
@@ -119,13 +125,14 @@ class Refinery extends Firm {
 
 		this.sell = {'metal': 10};
 
-		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 14};
+		this.upkeepCost = {'lumber': 2, 'tools':2};
+		this.upkeepInterval = 14;
 
 		this.produceCost = {'bread':10, 'ore': 40};
 		this.producedGoods = {'metal': 30};
 		this.variance = 5;
 
-		this.expandRequirements = {'bread': 40, 'ore': 160};
+		this.expandRequirement = {'bread': 40, 'ore': 160};
 		this.expandReady = {'money': 600, 'bread': 40, 'ore': 160, 'tools': 20, 'lumber': 30};
 		this.expandCost = {'money': 300, 'bread': 30, 'ore': 80, 'tools': 10, 'lumber': 20};
 	}
@@ -140,13 +147,14 @@ class Mint extends Firm {
 
 		this.sell = {'money': 1}; // sells 1 money for 1 money... might want to change later...
 
-		this.upkeep = { 'lumber': 2, 'tools':2, 'interval': 21};
+		this.upkeepCost = {'lumber': 2, 'tools':2};
+		this.upkeepInterval = 21;
 
 		this.produceCost = {'bread':20, 'metal': 20};
 		this.producedGoods = {'money': 40};
 		this.variance = 5;
 
-		this.expandRequirements = {'bread': 80, 'metal': 80};
+		this.expandRequirement = {'bread': 80, 'metal': 80};
 		this.expandReady = {'money': 600, 'bread': 80, 'tools': 20, 'metal': 80, 'lumber': 30};
 		this.expandCost = {'money': 400, 'bread': 40, 'tools': 10, 'metal': 40, 'lumber': 20};
 	}
