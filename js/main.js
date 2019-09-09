@@ -174,7 +174,7 @@ function start() {
 }
 
 // can be called with firm type, if not random firm type
-const MAX_FIRMS = 200;
+const MAX_FIRMS = 300;
 function newFirm(firmType, sellPrice=10) {
 	if(currentFirmNum>=MAX_FIRMS)
 		return false;
