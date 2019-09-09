@@ -1,6 +1,8 @@
 function display(firms) {
 	let tmpHTML = '';
 
+	let avgPrices = {};
+
 	for(firm in firms) {
 		tmpHTML += '<div class="col-sm-6 col-md-4">'
 		tmpHTML += 'Firm #' + firms[firm].firmNum + ' - ' + firms[firm].type() + ':<br>';
@@ -14,16 +16,34 @@ function display(firms) {
 		// 	tmpHTML += item + ': ' + firms[firm].reserve[item] + 
 		// 	'<div class="progressbar" style="width:' + Math.min(firms[firm].reserve[item]/10,200) + 'px;"></div>';
 		// }
-		tmpHTML += '<hr>Efficiency: ' + round(firms[firm].efficiency, 3);
+		tmpHTML += '<hr>Efficiency: ' + round(firms[firm].efficiency);
 		tmpHTML += '<br>Trying to Expand: ' + firms[firm].hasExpand();
 		tmpHTML += '<br>Times Expanded: ' + firms[firm].timesExpanded;
 		tmpHTML += '<hr>Sell Price: ' + firms[firm].sell[Object.keys(firms[firm].sell)[0] ];
 		tmpHTML += '<br>For Sale: ' + firms[firm].forSale;
 		tmpHTML += '<br>Money To Save: ' + firms[firm].moneyToSave;
 		tmpHTML += '</div>';
-	}
 
+		// ----------------
+
+		let sellResource = Object.keys(firms[firm].sell)[0];
+		if(!avgPrices[sellResource]) {
+			avgPrices[sellResource] = {};
+			avgPrices[sellResource].count = 0;
+			avgPrices[sellResource].sum = 0;
+		}
+		avgPrices[sellResource].sum += firms[firm].sell[sellResource];
+		avgPrices[sellResource].count++;
+	}
+	console.log(avgPrices);
 	document.getElementById('display').innerHTML = tmpHTML;
+
+	tmpHTML = 'Prices: ';
+	for(resource in avgPrices) {
+		tmpHTML += resource + ' : ' + round(avgPrices[resource].sum / avgPrices[resource].count) + ' | ';
+	}
+	document.getElementById('prices').innerHTML = tmpHTML;
+
 	document.getElementById('ticks').innerHTML = ticks;
 	document.getElementById('firms').innerHTML = AIs.length;
 	document.getElementById('activity').innerHTML = activity +
@@ -58,6 +78,6 @@ function display(firms) {
 	document.getElementById('firm-types').innerHTML = tmpHTML;
 }
 
-function round(num, places) {
+function round(num, places=3) {
 	return Number( (num).toFixed(places) );
 }
