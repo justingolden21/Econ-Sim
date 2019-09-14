@@ -1,60 +1,126 @@
-// ignore initial inventory because we will run optimally
-// take into account amount of inputs available (and starting values)
-// take into account multiple different prices and amounts available
-function updateBuyValues(firm, purchaseCosts) {
+/* Notes:
+if firm is otherwise ready to expand, they save money equal to expandReady
 
-	let availableMoney = firm.inventory['money'];
-	// let spentMoney = 0;
-	let doingUpkeep = false;
-	let upkeepResource, upkeepResourceToBuy;
+doesn't buy a resource it produces for expansion
+	code is in check for "firm.hasExpand()" in doBuy() below
+doesn't sell resource it produces equal to amount necessary for expansion
+	code is in adjust() in Firm class in main.js
 
-	// buy for upkeep cost first
-	if(firm.ticks % firm.upkeep['interval'] == 0) {
-		doingUpkeep = true;
-		upkeepResource = firm.upkeep['resource'];
-		let upkeepCost = firm.upkeep['cost'];
-		
-		let upkeepResourcePurchaseCosts = purchaseCosts[upkeepResource];
-		if(!purchaseCosts[upkeepResource]) {
-			upkeepResourceToBuy = 0;
+make sure they don't lose expandRequirement
+could lose it if it's:
+1. money they spend
+2. good they sell
+3. used in upkeep cost
+*/
+function buyResources(firm, purchaseCosts, resources, message) {
+	// if(message=='expand') {
+	// 	console.log(firm.type() );
+	// 	console.log(firm.firmNum );
+	// 	console.log(purchaseCosts);
+	// 	console.log(resources);
+	// }
+	
+	let amountBought = 0;
+
+	// buys as many of resources as possible
+	for(resource in resources) {
+		if(resource=='money') continue;
+
+		// how much they need
+		let amountToBuy = Math.max(resources[resource] - firm.inventory[resource], 0);
+		if(amountToBuy==0) {
+			break;
 		}
-		else {
 
-			let upkeepResourceIdx = 0;
+		// loop through each seller of resource
+		if(!purchaseCosts[resource]) return;
+		while(purchaseCosts[resource].length > 0) {
 
-			upkeepResourceToBuy = 0;
+			amountToBuy = Math.max(resources[resource] - firm.inventory[resource], 0);
 
-			while(upkeepResourceIdx < upkeepResourcePurchaseCosts.length && upkeepResourceToBuy < upkeepCost) {
-				let upkeepResourcePurchaseCost = upkeepResourcePurchaseCosts[upkeepResourceIdx][0];
-				let upkeepResourceAvailable = upkeepResourcePurchaseCosts[upkeepResourceIdx][1];
+			let resourceInfo = purchaseCosts[resource][0];
 
-				if(upkeepCost - upkeepResourceToBuy > upkeepResourceAvailable) {
-					// buy all (remaining available)
-					upkeepResourceToBuy += upkeepResourceAvailable;
-				} else {
-					// buy necessary (remaining necessary)
-					upkeepResourceToBuy += upkeepCost - upkeepResourceToBuy;
-				}
+			let resourceAvailable = resourceInfo[AVAILABLE];
+			let moneyAvailable = Math.max(firm.inventory['money']-firm.moneyToSave, 0);
+			let canAfford = Math.floor(moneyAvailable / resourceInfo[PRICE]);
 
-				let moneyToSpend = upkeepResourcePurchaseCost * upkeepResourceToBuy;
-				// spentMoney += moneyToSpend;
-				availableMoney -= moneyToSpend;
-				upkeepResourceAvailable -=upkeepResourceToBuy;
+			// min of how much firm needs, how much is available, and how much firm can afford
+			let tmpAmountToBuy = Math.min(amountToBuy, resourceAvailable);
+			tmpAmountToBuy = Math.min(tmpAmountToBuy, canAfford);
 
-				if(upkeepResourceAvailable == 0) {
-					upkeepResourceIdx++;
-				}
+
+			// takes into account running out of money or not wanting any more (Bobby: or meeting quota)
+			if(tmpAmountToBuy == 0) {
+			    console.log("this is the produceCost[0] "+ firm.produceCost[Object.keys(firm.produceCost)[0]] + " and this is the amountBought RN " + amountBought);
+			    console.log( "object " + Object.keys(firm.produceCost)[1] );
+			    console.log("Now to find what key we are talking about here: " + resource);
+			    break;
 			}
+			    else if (Object.keys(firm.produceCost)[0] == resource && amountBought >= firm.produceCost[Object.keys(firm.produceCost)[0]]) {
+			      console.log("Maxxed out of resource 1 " + resource + " amount bought is " + amountBought);
+			      amountBought = 0;
+			      break;
+			      
+			    }
+			    
+			    else if (Object.keys(firm.produceCost)[1] == resource && amountBought >= firm.produceCost[Object.keys(firm.produceCost)[1]]) {
+			      console.log(" Maxxed out of resource 2 " + resource + " amount bought is " + amountBought);
+			      amountBought = 0;
+				    break;
+			}
+			
+			
+
+			// buy tmpAmountToBuy
+
+			let seller = AIs[resourceInfo[FIRM_NUM] ];
+
+			if(message=='expand') {
+				// params for this func, and args passed to doTrade
+				// console.log(firm.str(), purchaseCosts, resources); // very fuckin useful console logs
+				// console.log(seller.str(), firm.str(), resource, tmpAmountToBuy); // very fuckin useful console logs
+			}
+
+			// seller, buyer, resource, amount
+			doTrade(seller, firm, resource, tmpAmountToBuy);
+			amountBought += tmpAmountToBuy; //for imposing limit
+			
+			// below line commented because we already (should) account for the resources we've aquired
+			// resources[resource] -= tmpAmountToBuy; // update our parameter so we don't keep buying
+			// console.log(firm.type(), 'tradin for them', resource);
+
+			purchaseCosts[resource][0][AVAILABLE] -= tmpAmountToBuy;
+			if(purchaseCosts[resource][0][AVAILABLE]==0) {
+				purchaseCosts[resource].splice(0,1); // remove first elm
+			}
+
 		}
 
 	}
+}
+function doBuy(firm, purchaseCosts) {
+	// if(false) {
+	if(!firm.hasUpkeep() ) {
+		buyResources(firm, purchaseCosts, firm.upkeepCost, 'upkeep');
+	}
+	// if(false) {
+	if(firm.hasExpand() ) {
+		// console.log('tryin to expand a', firm.type() );
 
-	/* NOTE:
-	make sure money checks out for below and updated amount available object is good
-	check if resources are same as ones below before returning combined objects
-	*/
+		// note: doesn't attempt to buy resource it produces
+		let sellResource = Object.keys(firm.sell)[0];
+		if(sellResource in firm.expandReady) {
+			buyResources(firm, purchaseCosts, subtractAllFrom(sellResource, firm.expandReady), 'expand');
+		}
+		else {
+			buyResources(firm, purchaseCosts, firm.expandReady, 'expand');
+		}
 
-	// getting variables
+
+		return; //todo remove this
+
+	}
+
 	let input1 = Object.keys(firm.produceCost)[0];
 	let input2 = Object.keys(firm.produceCost)[1];
 
@@ -64,171 +130,79 @@ function updateBuyValues(firm, purchaseCosts) {
 	let input1purchaseCosts = purchaseCosts[input1];
 	let input2purchaseCosts = purchaseCosts[input2];
 
-	if(!purchaseCosts[input1] || !purchaseCosts[input2]) {
-		firm.buy = {[input1]: 0, [input2]: 0};
-		return;
-	}
+	// nothing to purchase
+	if(!input1purchaseCosts || !input2purchaseCosts) return;
 
-	let output = Object.keys(firm.sell)[0];
-	let outputPrice = firm.sell[output];
-	let outputProduced = firm.producedGoods[output];
 
-	let input1Idx = 0;
-	let input2Idx = 0;
+	while(input1purchaseCosts.length > 0 && input2purchaseCosts.length > 0) {
 
-	let input1toBuy = 0;
-	let input2toBuy = 0;
+		input1cost = input1purchaseCosts[0][PRICE];
+		input2cost = input2purchaseCosts[0][PRICE];
 
-	// check to make sure we have money and both resources are available
-	while(availableMoney >= 0 && input1Idx < input1purchaseCosts.length && input2Idx < input2purchaseCosts.length) {
-		let input1purchaseCost = input1purchaseCosts[input1Idx][0];
-		let input2purchaseCost = input2purchaseCosts[input2Idx][0];
-		// checks if at current (lowest) price point, it's worth producing
-		if(input1purchaseCost * input1produceCost + input1purchaseCost * input2produceCost > outputPrice * outputProduced) {
-			// console.log('not worth it');
-			break; // combine with upkeep and finish function
+		let input1available = input1purchaseCosts[0][AVAILABLE];
+		let input2available = input2purchaseCosts[0][AVAILABLE];
+
+		let costPerProduce = input1produceCost * input1cost + input2produceCost * input2cost;
+
+		// if don't have money to produce once
+		let moneyAvailable = Math.max(firm.inventory['money']-firm.moneyToSave, 0);
+		if(moneyAvailable < costPerProduce) {
+			return;
 		}
-		// console.log('worth it');
-
-		let input1available = input1purchaseCosts[input1Idx][1];
-		let input2available = input2purchaseCosts[input2Idx][1];
-
-		// check which resource limits amount we can produce (at current price points)
-		if(input1available/input1produceCost < input2available/input2produceCost) {
-			// input1 is limiting
-			
-			let input2optimalPurchase = (input2produceCost * input1available) / input1produceCost;
-			// if we can buy out input1
-			if(input1produceCost * input1purchaseCost * input1available +
-				input2produceCost * input2purchaseCost * input2optimalPurchase < availableMoney) {
-				let moneyToSpend = input1purchaseCost * input1available + input2purchaseCost * input2optimalPurchase;
-				// spentMoney += moneyToSpend;
-				availableMoney -= moneyToSpend;
-				input1toBuy += input1available;
-				input2toBuy += input2optimalPurchase;
-
-				input1available = 0;
-				input2available -= input2optimalPurchase;
-			} else {
-				// solve system of equations to find optimal purchase amounts based off available money
-				input2optimalPurchase = (availableMoney * input2produceCost) / 
-					(Math.pow(input1produceCost,2)*input1purchaseCost + Math.pow(input2produceCost,2)*input2purchaseCost);
-				input2optimalPurchase = Math.floor(input2optimalPurchase);
-
-				let input1optimalPurchase = input2optimalPurchase * input1produceCost / input2produceCost;
-				let moneyToSpend = input1purchaseCost * input1optimalPurchase + input2purchaseCost * input2optimalPurchase;
-				// spentMoney += moneyToSpend;
-				availableMoney -= moneyToSpend;
-				input1toBuy += input1optimalPurchase;
-				input2toBuy += input2optimalPurchase;
-
-				input1available -= input1optimalPurchase;
-				input2available -= input2optimalPurchase;
-
-				availableMoney = 0; // testing
-			}
-			input1Idx++; // testing
-		} else if(input1available/input1produceCost > input2available/input2produceCost) {
-			// input2 is limiting
-			
-			let input1optimalPurchase = (input1produceCost * input2available) / input2produceCost;
-			// if we can buy out input2
-			if(input2produceCost * input2purchaseCost * input2available +
-				input1produceCost * input1purchaseCost * input1optimalPurchase < availableMoney) {
-				let moneyToSpend = input2purchaseCost * input2available + input1purchaseCost * input1optimalPurchase;
-				// spentMoney += moneyToSpend;
-				availableMoney -= moneyToSpend;
-				input2toBuy += input2available;
-				input1toBuy += input1optimalPurchase;
-
-				input2available = 0;
-				input1available -= input1optimalPurchase;
-			} else {
-				// solve system of equations to find optimal purchase amounts based off available money
-				input1optimalPurchase = (availableMoney * input1produceCost) / 
-					(Math.pow(input2produceCost,2)*input2purchaseCost + Math.pow(input1produceCost,2)*input1purchaseCost);
-				input1optimalPurchase = Math.floor(input1optimalPurchase);
-				
-				let input2optimalPurchase = input1optimalPurchase * input2produceCost / input1produceCost;
-				let moneyToSpend = input2purchaseCost * input2optimalPurchase + input1purchaseCost * input1optimalPurchase;
-				// spentMoney += moneyToSpend;
-				availableMoney -= moneyToSpend;
-				input2toBuy += input2optimalPurchase;
-				input1toBuy += input1optimalPurchase;
-
-				input2available -= input2optimalPurchase;
-				input1available -= input1optimalPurchase;
-
-				availableMoney = 0; // testing
-			}
-			input2Idx++; // testing
-		} else {
-			// perfect ratio
-			
-			// if we can buy out both input1 and input2
-			if(input1produceCost * input1purchaseCost * input1available +
-				input2produceCost * input2purchaseCost * input2available < availableMoney) {
-				let moneyToSpend = input1purchaseCost * input1available + input2purchaseCost * input2available;
-				// spentMoney += moneyToSpend;
-				availableMoney -= moneyToSpend;
-				input1toBuy += input1available;
-				input2toBuy += input2available;
-
-				input1available = 0;
-				input2available = 0;
-			} else {
-				// solve system of equations to find optimal purchase amounts based off available money
-				let input2optimalPurchase = (availableMoney * input2produceCost) / 
-					(Math.pow(input1produceCost,2)*input1purchaseCost + Math.pow(input2produceCost,2)*input2purchaseCost);
-				input2optimalPurchase = Math.floor(input2optimalPurchase);
-
-				let input1optimalPurchase = input2optimalPurchase * input1produceCost / input2produceCost;
-				let moneyToSpend = input1purchaseCost * input1optimalPurchase + input2purchaseCost * input2optimalPurchase;
-				// spentMoney += moneyToSpend;
-				availableMoney -= moneyToSpend;
-				input1toBuy += input1optimalPurchase;
-				input2toBuy += input2optimalPurchase;
-
-				input1available -= input1optimalPurchase;
-				input2available -= input2optimalPurchase;
-
-				availableMoney = 0; // testing
-			}
-			input1Idx++; // testing
-			input2Idx++; // testing
+		// if not worth if to produce
+		let sellPrice = firm.sell[Object.keys(firm.sell)[0] ];
+		let amountProduced = Object.values(firm.producedGoods)[0];
+		if(costPerProduce > 2*sellPrice*amountProduced) { // if losing more than 2x as much
+			// return;
 		}
 
-		// increment indicies to get to next price point(s)
-		if(input1available == 0) {
-			input1Idx++;
+		let amountCanProduce = Math.floor(moneyAvailable / costPerProduce);
+
+		// let seller1Num = input1purchaseCosts[input1Idx][2]; // firm num
+		let seller1Num = input1purchaseCosts[0][FIRM_NUM];
+		let seller1 = AIs[seller1Num]; // firm selling resource 1
+		// let seller2Num = input2purchaseCosts[input1Idx][2]; // firm num
+		let seller2Num = input2purchaseCosts[0][FIRM_NUM];
+		let seller2 = AIs[seller2Num]; // firm selling resource 2
+
+		let input1toBuy = amountCanProduce * input1produceCost;
+		let input2toBuy = amountCanProduce * input2produceCost;
+
+		input1toBuy = Math.min(input1toBuy, input1available);
+		input2toBuy = Math.min(input2toBuy, input2available);
+
+		if(input1toBuy * input1produceCost > input2toBuy * input2produceCost) {
+			// input 2 is limiting
+			let input1toBuy = input2toBuy / input2produceCost * input1produceCost;
+		} else if(input1toBuy * input1produceCost < input2toBuy * input2produceCost) {
+			// input 1 limiting
+			let input2toBuy = input1toBuy / input1produceCost * input2produceCost;
 		}
-		if(input2available == 0) {
-			input2Idx++;
-		}		
+
+		// complete transaction
+		// seller, buyer, resource, amount
+		doTrade(seller1, firm, input1, input1toBuy);
+		doTrade(seller2, firm, input2, input2toBuy);
+
+		// don't need an index, instead just remove the empty elements
+		// until we either don't want to buy or we ran out of elements
+		// updates the object for next firm
+		purchaseCosts[input1][0][AVAILABLE] -= input1toBuy;
+		purchaseCosts[input2][0][AVAILABLE] -= input2toBuy;
+
+		let toBreak = true;
+		if(purchaseCosts[input1][0][AVAILABLE]==0) {
+			purchaseCosts[input1].splice(0,1); // remove first elm
+			toBreak = false;
+		}
+		if(purchaseCosts[input2][0][AVAILABLE]==0) {
+			purchaseCosts[input2].splice(0,1); // remove first elm
+			toBreak = false;
+		}
+
+		if(toBreak) {
+			break;
+		}
 	} // end while
 
-	input1toBuy = Math.round(input1toBuy);
-	input2toBuy = Math.round(input2toBuy);
-
-	// last stuff combining upkeep resource if relevant
-	if(doingUpkeep) {
-		upkeepResourceToBuy = Math.round(upkeepResourceToBuy);
-
-		if(upkeepResource==input1) {
-			firm.buy = {[input1]: input1toBuy+upkeepResourceToBuy, [input2]: input2toBuy};
-			return;
-		} else if(upkeepResource==input2) {
-			firm.buy = {[input1]: input1toBuy, [input2]: input2toBuy+upkeepResourceToBuy};
-			return;
-		} else {
-			firm.buy = {[input1]: input1toBuy, [input2]: input2toBuy, [upkeepResource]: upkeepResourceToBuy};
-			return;
-		}
-	}
-	firm.buy = {[input1]: input1toBuy, [input2]: input2toBuy};
-	return;
-
-	// todo idea: edit amount available for future calls, so we don't have to calculate it each time we request it
-	// we only have to calc it at start of trade sequence
-	// basically, when we buy, update amount available
 }
