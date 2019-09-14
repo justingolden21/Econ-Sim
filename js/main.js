@@ -52,16 +52,20 @@ class Firm {
 		if(this.bankrupt) return;
 		this.prevAmountSold = 0;
 		this.ticks++;
+
 		if(this.ticks % this.upkeepInterval == 0) {
 			this.payUpkeep();
 		}
+
 		this.doProduction();
+
 		if(this.hasAll(this.expandReady) ) {
 			this.payAll(this.expandCost);
 			newFirm(this.type(), this.sell[Object.keys(this.sell)[0] ]); // type and sell price
 			console.log('I had a baby! It\'s a ' + this.type() );
 			this.timesExpanded++;
 		}
+
 		// it should already have all other resources in expandReady before saving money
 		// money is last step
 		if(this.hasAll(this.expandRequirement) && this.hasAll(this.expandReady) ) {
@@ -79,13 +83,28 @@ class Firm {
 		}
 	}
 	doProduction() {
-		let canProduce = true;
-		for(let resource in this.produceCost) {
-			if(!this.has(resource, this.produceCost[resource]) ) {
-				canProduce = false;
+		if(!this.hasAll(this.produceCost) )
+			return;
+
+		if(this.hasAll(this.expandRequirement) ) {
+			// if it's trying to expand but
+			// can't produce and have enough leftover to get to expandReady, return
+
+			// for each resource in expandReady
+			// if produceCost has that resource
+			// make sure there is enough to produce and still have amount necessary for expandReady
+			// else return
+			for(resource in this.expandReady) {
+				if(this.produceCost[resource]) {
+					if(this.inventory[resource] < this.produceCost[resource] + this.expandReady[resource]) {
+						return;
+					}
+				}
 			}
-		}
-		if(!canProduce) return;
+		} 
+
+		// -------- --------
+
 		for(let resource in this.produceCost) {
 			this.pay(resource, this.produceCost[resource]);
 		}
@@ -203,14 +222,14 @@ function newFirm(firmType, sellPrice=10) {
 let ticks = 0;
 let activity = 0;
 let prevActivity = 0;
-let tradeInterval = 3;
+const TRADE_INTERVAL = 3;
 function tick(overridePause=false) {
 	if(paused && !overridePause) return;
 
 	for(let i=0; i<AIs.length; i++) {
 		AIs[i].tick();
 	}
-	if(ticks % tradeInterval == 0) {
+	if(ticks % TRADE_INTERVAL == 0) {
 		prevActivity = activity;
 		activity = 0;
 		doTrades(AIs.filter(AI => AI.bankrupt==false) );

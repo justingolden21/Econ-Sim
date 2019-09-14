@@ -115,11 +115,9 @@ class Baker extends Firm {
 		this.producedGoods = {'bread': 100};
 		this.variance = 20;
 
-		this.expandRequirement = {'flour': 120, 'lumber': 10};
-		// this.expandReady = {'money': 500, 'bread': 50, 'tools': 20, 'lumber': 30};
-		this.expandReady = {'money': 500, 'bread': 50, 'tools': 20, 'lumber': 30};
-		this.expandCost = {'money': 200, 'lumber': 20};
-		// this.expandCost = {'money': 200, 'bread': 30, 'tools': 10, 'lumber': 20};
+		this.expandRequirement = {'flour': 240, 'lumber': 20};
+		this.expandReady = {'money': 1000, 'bread': 100, 'tools': 40, 'lumber': 60};
+		this.expandCost = {'money': 400, 'bread': 60, 'tools': 20, 'lumber': 40};
 	}
 }
 
