@@ -62,7 +62,6 @@ class Firm {
 		if(this.hasAll(this.expandReady) ) {
 			this.payAll(this.expandCost);
 			newFirm(this.type(), this.sell[Object.keys(this.sell)[0] ]); // type and sell price
-			console.log('I had a baby! It\'s a ' + this.type() );
 			this.timesExpanded++;
 		}
 
@@ -192,13 +191,19 @@ function start() {
 	display(AIs);
 }
 
+// const MAX_FIRMS = 300;
+const MAX_FIRMS_PER_TYPE = 100;
+
 // can be called with firm type, if not random firm type
-const MAX_FIRMS = 300;
 function newFirm(firmType, sellPrice=10) {
-	if(currentFirmNum>=MAX_FIRMS)
-		return false;
+	// if(currentFirmNum>=MAX_FIRMS)
+	// 	return false;
+
 	if(!firmType) 
 		firmType = 'mine smith forester farm mill baker refinery mint'.split(' ')[random(0,7)];
+
+	if(getFirmCount(firmType)>=MAX_FIRMS_PER_TYPE)
+		return false;
 
 	if(firmType == 'forester')
 		AIs[currentFirmNum] = new Forester(sellPrice);
@@ -216,6 +221,8 @@ function newFirm(firmType, sellPrice=10) {
 		AIs[currentFirmNum] = new Refinery(sellPrice);
 	else
 		AIs[currentFirmNum] = new Mill(sellPrice);
+
+	return true;
 }
 
 //  tick stuff
@@ -274,6 +281,15 @@ function normal01() {
 
 function print(str) {
 	console.log('Tick:', ticks, '-', str);
+}
+
+function getFirmCount(type) {
+	let count = 0;
+	for(firm in AIs) {
+		if(AIs[firm].type()==type)
+			count++;
+	}
+	return count;
 }
 
 // note: currently unused. remove this comment when used
