@@ -20,6 +20,10 @@ if you think about it, you'll see why that's hard to program
 
 want firms to start with money (so they can purchase) however dont want to add money to economy through making new firms. needs to get money from parent, but then money is expand cost
 
+make sure they arent limited in purchasing too little in their produce cost such that they never naturally end up with their expandRequirement and never even try to expand
+
+if a firm 1. isnt buying a resource to expand because thats the resource it produces, 2. isnt selling a resource cause theyre trying to expand and need that resource to expand, and 3. isnt producing their resource becuse the produce cost is also necessary to expand and they dont have enough, then it will NEVER get enough resources to expand, NEVER produce, and NEVER sell... make sure to avoid thi sort of lock...
+
 ======== TODO ========
 
 Add where firms buy from lowest price to highest

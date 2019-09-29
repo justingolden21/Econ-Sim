@@ -19,21 +19,23 @@ function buyResources(firm, purchaseCosts, resources, message) {
 	// 	console.log(purchaseCosts);
 	// 	console.log(resources);
 	// }
-	
-	let amountBought = 0;
 
 	// buys as many of resources as possible
 	for(resource in resources) {
-		if(resource=='money') continue;
+		if(resource=='money')
+			continue;
 
 		// how much they need
 		let amountToBuy = Math.max(resources[resource] - firm.inventory[resource], 0);
-		if(amountToBuy==0) {
-			break;
-		}
+		if(amountToBuy==0)
+			continue;
+
+		if(!purchaseCosts[resource])
+			continue;
+
+		// let tmpAmount = 0;
 
 		// loop through each seller of resource
-		if(!purchaseCosts[resource]) return;
 		while(purchaseCosts[resource].length > 0) {
 
 			amountToBuy = Math.max(resources[resource] - firm.inventory[resource], 0);
@@ -48,42 +50,23 @@ function buyResources(firm, purchaseCosts, resources, message) {
 			let tmpAmountToBuy = Math.min(amountToBuy, resourceAvailable);
 			tmpAmountToBuy = Math.min(tmpAmountToBuy, canAfford);
 
-
-			// takes into account running out of money or not wanting any more (Bobby: or meeting quota)
+			// takes into account running out of money or not wanting any more
 			if(tmpAmountToBuy == 0) {
-			    console.log("this is the produceCost[0] "+ firm.produceCost[Object.keys(firm.produceCost)[0]] + " and this is the amountBought RN " + amountBought);
-			    console.log( "object " + Object.keys(firm.produceCost)[1] );
-			    console.log("Now to find what key we are talking about here: " + resource);
-			    break;
+				break;
 			}
-			    else if (Object.keys(firm.produceCost)[0] == resource && amountBought >= firm.produceCost[Object.keys(firm.produceCost)[0]]) {
-			      console.log("Maxxed out of resource 1 " + resource + " amount bought is " + amountBought);
-			      amountBought = 0;
-			      break;
-			      
-			    }
-			    
-			    else if (Object.keys(firm.produceCost)[1] == resource && amountBought >= firm.produceCost[Object.keys(firm.produceCost)[1]]) {
-			      console.log(" Maxxed out of resource 2 " + resource + " amount bought is " + amountBought);
-			      amountBought = 0;
-				    break;
-			}
-			
-			
 
 			// buy tmpAmountToBuy
 
 			let seller = AIs[resourceInfo[FIRM_NUM] ];
 
-			if(message=='expand') {
+			// if(message=='expand') {
 				// params for this func, and args passed to doTrade
 				// console.log(firm.str(), purchaseCosts, resources); // very fuckin useful console logs
-				// console.log(seller.str(), firm.str(), resource, tmpAmountToBuy); // very fuckin useful console logs
-			}
+				// console.log(seller.str(), firm.str(), resource, tmpAmountToBuy); // very fuckin useful console logs				
+			// }
 
 			// seller, buyer, resource, amount
 			doTrade(seller, firm, resource, tmpAmountToBuy);
-			amountBought += tmpAmountToBuy; //for imposing limit
 			
 			// below line commented because we already (should) account for the resources we've aquired
 			// resources[resource] -= tmpAmountToBuy; // update our parameter so we don't keep buying
@@ -94,10 +77,19 @@ function buyResources(firm, purchaseCosts, resources, message) {
 				purchaseCosts[resource].splice(0,1); // remove first elm
 			}
 
-		}
+			// tmpAmount += tmpAmountToBuy;
 
-	}
+		} // end while
+
+		// if(message=='expand')
+			// console.log('Firm number', firm.firmNum, 'bought', tmpAmount, 'of', resource, 'to', message);
+
+	} // end for
 }
+
+// new code below
+const MAX_PRODUCE_BUY = 6;
+
 function doBuy(firm, purchaseCosts) {
 	// if(false) {
 	if(!firm.hasUpkeep() ) {
@@ -115,9 +107,7 @@ function doBuy(firm, purchaseCosts) {
 		else {
 			buyResources(firm, purchaseCosts, firm.expandReady, 'expand');
 		}
-
-
-		return; //todo remove this
+		// return; //todo remove this
 
 	}
 
@@ -133,6 +123,9 @@ function doBuy(firm, purchaseCosts) {
 	// nothing to purchase
 	if(!input1purchaseCosts || !input2purchaseCosts) return;
 
+	// new code below
+	let input1purchased = 0;
+	let input2purchased = 0;
 
 	while(input1purchaseCosts.length > 0 && input2purchaseCosts.length > 0) {
 
@@ -179,6 +172,15 @@ function doBuy(firm, purchaseCosts) {
 			let input2toBuy = input1toBuy / input1produceCost * input2produceCost;
 		}
 
+
+		// new code below
+		// limit amount to buy to max we should buy minus amount we already purchased
+		input1toBuy = Math.min(input1toBuy, 
+			(input1produceCost * MAX_PRODUCE_BUY) - input1purchased);
+		input2toBuy = Math.min(input2toBuy, 
+			(input2produceCost * MAX_PRODUCE_BUY) - input2purchased);
+
+
 		// complete transaction
 		// seller, buyer, resource, amount
 		doTrade(seller1, firm, input1, input1toBuy);
@@ -203,6 +205,21 @@ function doBuy(firm, purchaseCosts) {
 		if(toBreak) {
 			break;
 		}
+
+		// new code below
+		input1purchased += input1toBuy;
+		input2purchased += input2toBuy;
+
+		// new code below
+		if(input1purchased >= input1produceCost * MAX_PRODUCE_BUY) {
+			// console.log('get fucked');
+			break;
+		}
+		if(input2purchased >= input2produceCost * MAX_PRODUCE_BUY) {
+			// console.log('get fucked');
+			break;
+		}
+
 	} // end while
 
 }
