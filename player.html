@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Econ Sim</title>
+	<meta charset="utf-8">
+	<meta name="title=" content="Econ Sim">
+	<meta name="robots" content="index, follow">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Econ Sim">
+	<meta name="keywords" content="Econ Sim">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="css/player.css">
+	<script src="js/simple.js"></script>
+</head>
+
+<body class="container">
+	<br>
+	<div id="economy-overview">
+		<h3>Economy Overview</h3>
+		<p>
+			Tick:
+			<span id="ticks">0</span>
+			| Firms: 
+			<span id="firms">0</span>
+			| Resources: 
+			<span id="resources">0</span>
+			| Activity: 
+			<span id="activity">0</span>
+		</p>
+		Total Resources: <p id="total-resources"></p>
+		Total Firms: <p id="firm-types"></p>
+		Prices: <p id="prices"></p>
+	</div>
+
+	<hr>
+
+	<h3>My Inventory and Firms</h3>
+	<div class="row">
+		<div class="col-lg-8">
+			<h5>Trade:</h5>
+			<table id="trade-table"></table>			
+		</div>
+		<div class="col-lg-4">
+			<h5>Firms:</h5>
+			<div id="player-firms"></div>
+			<h5>Inventory:</h5>
+			<div id="player-inventory"></div>
+		</div>
+	</div>
+
+
+	</div>
+
+</body>
+</html>

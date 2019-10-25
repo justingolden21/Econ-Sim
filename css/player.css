@@ -1,0 +1,19 @@
+* {
+	text-align: center;
+	font-weight: bold;
+}
+body {
+	background-image: url('../img/bg-transparent.png');
+}
+.icon-sm {
+	width: 32px;
+}
+.icon-md {
+	width: 48px;
+}
+#trade-table td {
+	padding: 20px;
+}
+#player-firms {
+	/*text-align: right;*/
+}
