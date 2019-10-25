@@ -28,12 +28,13 @@
 	<script src="js/trade.js"></script>
 	<script src="js/display.js"></script>
 	<script src="js/buy.js"></script>
+	<script src="js/player.js"></script>
 </head>
 
 <body class="container">
 	<br>
 	<div class="text-center">
-		<h3>Econ Sim v.-0.0.0</h3>
+		<h3>Econ Sim v.0.0.0</h3>
 		<button id="pause-btn" class="btn btn-dark">Pause</button>
 		<button id="tick-btn" class="btn btn-dark">Tick</button>
 		<br><br>
@@ -51,6 +52,34 @@
 		<p id="total-resources"></p>
 		<p id="firm-types"></p>
 		<p id="prices"></p>
+	</div>
+
+	<p>Player:</p>
+	<div id="player-display"></div>
+	<div id="player-inputs">
+		<table>
+			<tr>
+				<td>Money</td>
+			</tr>
+			<tr>
+				<td>Bread</td>
+				<td>Buy/sell:
+					<div class="custom-control custom-switch">
+						<input type="checkbox" class="custom-control-input" id="customSwitch1">
+						<label class="custom-control-label" for="customSwitch1">Buy</label>
+					</div>
+				</td>
+				<td>
+					<label>Amount:</label>
+					<input type="number" class="form-control" min="1" max="100" value="10">
+				</td>
+				<td>
+					<label>Price:</label>
+					<input type="number" class="form-control" min="1" max="100" value="10">
+				</td>
+			</tr>
+		</table>
+
 	</div>
 
 	<div id="display" class="row"></div>

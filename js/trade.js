@@ -55,7 +55,7 @@ function doTrades(firms) {
 function doTrade(seller, buyer, resource, amount) {
 	let price = seller.sell[resource];
 	if(!seller.has(resource, amount) || !buyer.has('money', price*amount) ) {
-		console.error('Not enough resource or money');
+		console.error('Not enough resource or money', seller.has(resource, amount), buyer.has('money', price*amount) );
 		return false;
 	}
 

@@ -189,6 +189,7 @@ function start() {
 		newFirm();
 	}
 	display(AIs);
+	setupPlayer();
 }
 
 // const MAX_FIRMS = 300;
@@ -206,20 +207,28 @@ function newFirm(firmType, sellPrice=10) {
 		return false;
 
 	if(firmType == 'forester')
+		// AIs.push(new Forester(sellPrice) );
 		AIs[currentFirmNum] = new Forester(sellPrice);
 	else if(firmType == 'smith')
+		// AIs.push(new Smith(sellPrice) );
 		AIs[currentFirmNum] = new Smith(sellPrice);
 	else if(firmType == 'farm')
+		// AIs.push(new Farm(sellPrice) );
 		AIs[currentFirmNum] = new Farm(sellPrice);
 	else if(firmType == 'mine')
+		// AIs.push(new Mine(sellPrice) );
 		AIs[currentFirmNum] = new Mine(sellPrice);
 	else if(firmType == 'mint')
+		// AIs.push(new Mint(sellPrice) );
 		AIs[currentFirmNum] = new Mint(sellPrice);
 	else if(firmType == 'baker')
+		// AIs.push(new Baker(sellPrice) );
 		AIs[currentFirmNum] = new Baker(sellPrice);
 	else if(firmType == 'refinery')
+		// AIs.push(new Refinery(sellPrice) );
 		AIs[currentFirmNum] = new Refinery(sellPrice);
 	else
+		// AIs.push(new Mill(sellPrice) );
 		AIs[currentFirmNum] = new Mill(sellPrice);
 
 	return true;
@@ -234,17 +243,17 @@ function tick(overridePause=false) {
 	if(paused && !overridePause) return;
 
 	for(let i=0; i<AIs.length; i++) {
-		AIs[i].tick();
+		if(AIs[i])
+			AIs[i].tick();
 	}
 	if(ticks % TRADE_INTERVAL == 0) {
 		prevActivity = activity;
 		activity = 0;
 		doTrades(AIs.filter(AI => AI.bankrupt==false) );
 		for(let i=0; i<AIs.length; i++) {
-			AIs[i].adjust();
+			if(AIs[i])
+				AIs[i].adjust();
 		}
-
-		
 	}
 	ticks++;
 	display(AIs);

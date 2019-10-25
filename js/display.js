@@ -83,6 +83,20 @@ function display(firms) {
 		tmpHTML += type + ': ' + firmTypes[type] + ' | ';
 	}
 	document.getElementById('firm-types').innerHTML = tmpHTML;
+
+	displayPlayer();
+}
+
+function displayPlayer() {
+	if(!player) return;
+
+	let tmpHTML = '';
+
+	for(resource in player[0].inventory) {
+		tmpHTML += resource + ': ' + player[0].inventory[resource] + ' | ';
+	}
+
+	document.getElementById('player-display').innerHTML = tmpHTML;
 }
 
 function round(num, places=3) {
