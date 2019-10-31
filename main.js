@@ -121,12 +121,13 @@ class Firm {
 		// can edit function so seller prefers to not sell and save resources for later
 		let sellResource = Object.keys(this.sell)[0];
 		// console.log(this.prevAmountProduced, this.prevAmountSold);
-		if(this.prevAmountProduced >= this.prevAmountSold) { // produced more than sold
+		if(this.prevAmountProduced/2 > this.prevAmountSold) { // produced more that 2 * sold
 			this.sell[sellResource] -= 1;
 			//console.log("I sold!");
 		} else {
 			// console.log('goin up');
-			this.sell[sellResource] += 1;
+			let factor = this. prevAmountSold / this.prevAmountProduced;
+			this.sell[sellResource] += Math.round(factor + 1); //maybe instead of + 1, it should be factor * 10% of price, or if price is 1, factor + 1?
 		}
 		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
 
@@ -183,7 +184,7 @@ class Firm {
 // make all the firms :)
 let AIs = [];
 let currentFirmNum = 0;
-let startFirms = 70;
+let startFirms = 100;
 function start() {
 	for(let i=0; i<startFirms; i++) {
 		newFirm();
@@ -192,7 +193,7 @@ function start() {
 }
 
 // const MAX_FIRMS = 300;
-const MAX_FIRMS_PER_TYPE = 10;
+const MAX_FIRMS_PER_TYPE = 20;
 
 // can be called with firm type, if not random firm type
 function newFirm(firmType, sellPrice=10) {
@@ -202,7 +203,7 @@ function newFirm(firmType, sellPrice=10) {
 	if(!firmType)
 		firmType = 'mine smith forester farm mill baker refinery mint'.split(' ')[random(0,7)];
 
-	if(getFirmCount(firmType)>=MAX_FIRMS_PER_TYPE && firmType == 'forester') //only one firmt a time should be limited, and that should limit the others
+	if(getFirmCount(firmType)>=MAX_FIRMS_PER_TYPE && firmType == 'forester')
 		return false;
 
 	if(firmType == 'forester')
