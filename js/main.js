@@ -100,7 +100,7 @@ class Firm {
 					}
 				}
 			}
-		} 
+		}
 
 		// -------- --------
 
@@ -121,12 +121,13 @@ class Firm {
 		// can edit function so seller prefers to not sell and save resources for later
 		let sellResource = Object.keys(this.sell)[0];
 		// console.log(this.prevAmountProduced, this.prevAmountSold);
-		if(this.prevAmountProduced >= this.prevAmountSold) { // produced more than sold
+		if(this.prevAmountProduced/2 > this.prevAmountSold) { // produced more that 2 * sold
 			this.sell[sellResource] -= 1;
 			//console.log("I sold!");
 		} else {
 			// console.log('goin up');
-			this.sell[sellResource] += 1;
+			let factor = this. prevAmountSold / this.prevAmountProduced;
+			this.sell[sellResource] += Math.round(factor + 1); //maybe instead of + 1, it should be factor * 10% of price, or if price is 1, factor + 1?
 		}
 		this.sell[sellResource] = Math.max(1, this.sell[sellResource]);
 
@@ -193,42 +194,34 @@ function start() {
 }
 
 // const MAX_FIRMS = 300;
-const MAX_FIRMS_PER_TYPE = 100;
+const MAX_FIRMS_PER_TYPE = 20;
 
 // can be called with firm type, if not random firm type
 function newFirm(firmType, sellPrice=10) {
 	// if(currentFirmNum>=MAX_FIRMS)
 	// 	return false;
 
-	if(!firmType) 
+	if(!firmType)
 		firmType = 'mine smith forester farm mill baker refinery mint'.split(' ')[random(0,7)];
 
-	if(getFirmCount(firmType)>=MAX_FIRMS_PER_TYPE)
+	if(getFirmCount(firmType)>=MAX_FIRMS_PER_TYPE && firmType == 'forester')
 		return false;
 
 	if(firmType == 'forester')
-		// AIs.push(new Forester(sellPrice) );
 		AIs[currentFirmNum] = new Forester(sellPrice);
 	else if(firmType == 'smith')
-		// AIs.push(new Smith(sellPrice) );
 		AIs[currentFirmNum] = new Smith(sellPrice);
 	else if(firmType == 'farm')
-		// AIs.push(new Farm(sellPrice) );
 		AIs[currentFirmNum] = new Farm(sellPrice);
 	else if(firmType == 'mine')
-		// AIs.push(new Mine(sellPrice) );
 		AIs[currentFirmNum] = new Mine(sellPrice);
 	else if(firmType == 'mint')
-		// AIs.push(new Mint(sellPrice) );
 		AIs[currentFirmNum] = new Mint(sellPrice);
 	else if(firmType == 'baker')
-		// AIs.push(new Baker(sellPrice) );
 		AIs[currentFirmNum] = new Baker(sellPrice);
 	else if(firmType == 'refinery')
-		// AIs.push(new Refinery(sellPrice) );
 		AIs[currentFirmNum] = new Refinery(sellPrice);
 	else
-		// AIs.push(new Mill(sellPrice) );
 		AIs[currentFirmNum] = new Mill(sellPrice);
 
 	return true;
@@ -316,7 +309,7 @@ function subtractResources(resources1, resources2) {
 
 	for(resource in resources1) {
 		if(resource in resources2) {
-			rtn[resource] = resources1[resource] - resources2[resource];			
+			rtn[resource] = resources1[resource] - resources2[resource];
 		}
 		else {
 			rtn[resource] = resources1[resource];
