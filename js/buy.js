@@ -13,8 +13,6 @@ could lose it if it's:
 3. used in upkeep cost
 */
 
-const MAX_OF_RESOURCE = 5000;
-
 function buyResources(firm, purchaseCosts, resources, message) {
 	// if(message=='expand') {
 	// 	console.log(firm.type() );
@@ -42,7 +40,9 @@ function buyResources(firm, purchaseCosts, resources, message) {
 		while(purchaseCosts[resource].length > 0) {
 
 			amountToBuy = Math.max(resources[resource] - firm.inventory[resource], 0);
-			amountToBuy = Math.min(resources[resource] - firm.inventory[resource], MAX_OF_RESOURCE);
+			// limit to double expandReady of resource. note that expandReady minus expandCost must be greater than upkeepCost
+			// otherwise a firm that is expanding could be prevented from purhcasing its upkeep cost, then expand, then go bankrupt 
+			amountToBuy = Math.min(resources[resource] - firm.inventory[resource], firm.expandReady[resource]*2);
 
 			let resourceInfo = purchaseCosts[resource][0];
 
