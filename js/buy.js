@@ -12,6 +12,9 @@ could lose it if it's:
 2. good they sell
 3. used in upkeep cost
 */
+
+const MAX_OF_RESOURCE = 5000;
+
 function buyResources(firm, purchaseCosts, resources, message) {
 	// if(message=='expand') {
 	// 	console.log(firm.type() );
@@ -39,6 +42,7 @@ function buyResources(firm, purchaseCosts, resources, message) {
 		while(purchaseCosts[resource].length > 0) {
 
 			amountToBuy = Math.max(resources[resource] - firm.inventory[resource], 0);
+			amountToBuy = Math.min(resources[resource] - firm.inventory[resource], MAX_OF_RESOURCE);
 
 			let resourceInfo = purchaseCosts[resource][0];
 

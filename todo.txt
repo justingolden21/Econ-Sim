@@ -9,6 +9,10 @@ ability to "own" multiple firms and trade among yourself "automatically"/afk
 
 parent passes their price to child
 
+arrows for number of each firm type up or down
+
+color highlighted resources per firm (if it's produce cost or for expand or upkeep or just money)
+
 ======== NOTES ========
 in future there may be production substitutes, you can either have bread OR meat etc.
 That will make the supply curve smoother as well
