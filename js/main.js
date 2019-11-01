@@ -39,6 +39,7 @@ class Firm {
 		this.efficiency = normal01();
 
 		this.ticks = 0;
+		this.upkeepOffset = random(0, 20);
 		this.bankrupt = false;
 
 		this.prevAmountProduced = 0;
@@ -53,7 +54,7 @@ class Firm {
 		this.prevAmountSold = 0;
 		this.ticks++;
 
-		if(this.ticks % this.upkeepInterval == 0) {
+		if( (this.ticks + this.upkeepOffset) % this.upkeepInterval == 0) {
 			this.payUpkeep();
 		}
 
