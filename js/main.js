@@ -1,7 +1,8 @@
 // setting stuff up: ticks, buttons, key listeners
 window.onload = ()=> {
 	start();
-	window.setInterval(tick, 100);
+	// window.setInterval(tick, 100);
+	window.setInterval(tick, 500);
 	document.getElementById('pause-btn').onclick = ()=> {
 		paused = !paused;
 	};
@@ -121,7 +122,8 @@ class Firm {
 		// can edit function so seller prefers to not sell and save resources for later
 		let sellResource = Object.keys(this.sell)[0];
 		// console.log(this.prevAmountProduced, this.prevAmountSold);
-		if(this.prevAmountProduced/2 > this.prevAmountSold) { // produced more that 2 * sold
+		if(this.prevAmountProduced > this.prevAmountSold) { // produced more that 2 * sold
+		// if(this.prevAmountProduced/2 > this.prevAmountSold) { // produced more that 2 * sold
 			this.sell[sellResource] -= 1;
 			//console.log("I sold!");
 		} else {
