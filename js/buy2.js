@@ -12,6 +12,10 @@ could lose it if it's:
 2. good they sell
 3. used in upkeep cost
 */
+
+// note: [0] is just first item in purcahse costs before we shift array
+// not always alias for PRICE
+
 function buyResources(firm, purchaseCosts, resources, message) {
 	// if(message=='expand') {
 	// 	console.log(firm.type() );
@@ -111,37 +115,84 @@ function doBuy(firm, purchaseCosts) {
 
 	}
 
-	let input1 = Object.keys(firm.produceCost)[0];
-	let input2 = Object.keys(firm.produceCost)[1];
+	let inputs = Object.keys(firm.produceCost);
+	// let input1 = Object.keys(firm.produceCost)[0];
+	// let input2 = Object.keys(firm.produceCost)[1];
 
-	let input1produceCost = firm.produceCost[input1];
-	let input2produceCost = firm.produceCost[input2];
+	// indexed by same index as inputs, ie. inputs[3] should correspond to inputProduceCosts[3]
+	let inputProduceCosts = [];
+	for(let i=0; i<inputs.length; i++) {
+		// the firm's produce cost of that input
+		inputProduceCosts[i] = firm.produceCost[inputs[i] ];
+	}
+	// let input1produceCost = firm.produceCost[input1];
+	// let input2produceCost = firm.produceCost[input2];
 
-	let input1purchaseCosts = purchaseCosts[input1];
-	let input2purchaseCosts = purchaseCosts[input2];
+	let inputPurchaseCosts = [];
+	let nothingToPurchase = true;
+	for(let i=0; i<inputs.length; i++) {
+		inputPurchaseCosts[i] = purchaseCosts[inputs[i] ];
+		if(purchaseCosts[inputs[i] ]) {
+			nothingToPurchase = false;
+		}
+	}
+	if(nothingToPurchase) {
+		return;
+	}
+	// let input1purchaseCosts = purchaseCosts[input1];
+	// let input2purchaseCosts = purchaseCosts[input2];
 
 	// nothing to purchase
-	if(!input1purchaseCosts || !input2purchaseCosts) return;
+	// if(!input1purchaseCosts || !input2purchaseCosts) return;
 
-	// new code below
-	let input1purchased = 0;
-	let input2purchased = 0;
+	let inputsPurchased = [];
+	for(let i=0; i<inputs.length; i++) {
+		inputsPurchased[i] = 0;
+	}
+	// let input1purchased = 0;
+	// let input2purchased = 0;
 
-	while(input1purchaseCosts.length > 0 && input2purchaseCosts.length > 0) {
+	// while(input1purchaseCosts.length > 0 && input2purchaseCosts.length > 0) {
+	while(true) {
+		let noneLeft = true;
+		for(let i=0; i<inputs.length; i++) {
+			if(inputPurchaseCosts[i].length==0) {
+				noneLeft = false;
+			}
+		}
+		if(noneLeft) {
+			break;
+		}
 
-		input1cost = input1purchaseCosts[0][PRICE];
-		input2cost = input2purchaseCosts[0][PRICE];
+		let inputCosts = [];
+		for(let i=0; i<inputs.length; i++) {
+			inputCosts[i] = inputPurchaseCosts[i][0][PRICE];
+		}
+		// let input1cost = input1purchaseCosts[0][PRICE];
+		// let input2cost = input2purchaseCosts[0][PRICE];
 
-		let input1available = input1purchaseCosts[0][AVAILABLE];
-		let input2available = input2purchaseCosts[0][AVAILABLE];
+		let inputsAvailable = [];
+		for(let i=0; i<inputs.length; i++) {
+			inputsAvailable[i] = inputPurchaseCosts[i][0][AVAILABLE];
+		}
+		// let input1available = input1purchaseCosts[0][AVAILABLE];
+		// let input2available = input2purchaseCosts[0][AVAILABLE];
 
-		let costPerProduce = input1produceCost * input1cost + input2produceCost * input2cost;
+		let costPerProduce = 0;
+		for(let i=0; i<inputs.length; i++) {
+			costPerProduce += inputPurchaseCosts[i] * inputCosts[i];
+		}
+		// let costPerProduce = input1produceCost * input1cost + input2produceCost * input2cost;
 
+
+		// (same as before)
 		// if don't have money to produce once
 		let moneyAvailable = Math.max(firm.inventory['money']-firm.moneyToSave, 0);
 		if(moneyAvailable < costPerProduce) {
 			return;
 		}
+
+		// (same as before)
 		// if not worth if to produce
 		let sellPrice = firm.sell[Object.keys(firm.sell)[0] ];
 		let amountProduced = Object.values(firm.producedGoods)[0];
@@ -149,76 +200,146 @@ function doBuy(firm, purchaseCosts) {
 			// return;
 		}
 
+		// (same as before)
 		let amountCanProduce = Math.floor(moneyAvailable / costPerProduce);
 
-		// let seller1Num = input1purchaseCosts[input1Idx][2]; // firm num
-		let seller1Num = input1purchaseCosts[0][FIRM_NUM];
-		let seller1 = AIs[seller1Num]; // firm selling resource 1
-		// let seller2Num = input2purchaseCosts[input1Idx][2]; // firm num
-		let seller2Num = input2purchaseCosts[0][FIRM_NUM];
-		let seller2 = AIs[seller2Num]; // firm selling resource 2
-
-		let input1toBuy = amountCanProduce * input1produceCost;
-		let input2toBuy = amountCanProduce * input2produceCost;
-
-		input1toBuy = Math.min(input1toBuy, input1available);
-		input2toBuy = Math.min(input2toBuy, input2available);
-
-		if(input1toBuy * input1produceCost > input2toBuy * input2produceCost) {
-			// input 2 is limiting
-			let input1toBuy = input2toBuy / input2produceCost * input1produceCost;
-		} else if(input1toBuy * input1produceCost < input2toBuy * input2produceCost) {
-			// input 1 limiting
-			let input2toBuy = input1toBuy / input1produceCost * input2produceCost;
+		let sellerNums = [];
+		let sellers = [];
+		for(let i=0; i<inputs.length; i++) {
+			sellerNums[i] = inputPurchaseCosts[i][0][FIRM_NUM];
+			sellers[i] = AIs[sellerNums[i] ];
 		}
 
+		// let seller1Num = input1purchaseCosts[0][FIRM_NUM];
+		// let seller1 = AIs[seller1Num]; // firm selling resource 1
+		// let seller2Num = input2purchaseCosts[0][FIRM_NUM];
+		// let seller2 = AIs[seller2Num]; // firm selling resource 2
 
-		// new code below
+		let inputsToBuy = [];
+		for(let i=0; i<inputs.length; i++) {
+			inputsToBuy[i] = amountCanProduce * inputProduceCosts[i];
+			inputsToBuy[i] = Math.min(inputsToBuy[i], inputsAvailable[i]);
+		}
+
+		// let input1toBuy = amountCanProduce * input1produceCost;
+		// let input2toBuy = amountCanProduce * input2produceCost;
+		// input1toBuy = Math.min(input1toBuy, input1available);
+		// input2toBuy = Math.min(input2toBuy, input2available);
+
+		// --------------------------------
+
+		// find limiting inputs on this iteration
+		// let limitingInputs = [];
+		// goal is to edit numbers of inputsToBuy to the limiting resource
+		// first loop finds how much each input is limiting
+		let amountCanProduceLimitedOfInput = [];
+		for(let i=0; i<inputs.length; i++) {
+			amountCanProduceLimitedOfInput[i] = Math.floor(inputsToBuy[i] / inputProduceCosts[i]);
+		}
+		// second loop finds the amount we can produce given all limitiations
+		let minCanProduce = -1;
+		for(let i=0; i<inputs.length; i++) {
+			if(minCanProduce==-1 || amountCanProduceLimitedOfInput[i] < minCanProduce) {
+				minCanProduce = amountCanProduceLimitedOfInput[i];
+			}
+		}
+		// third loop sets inputsToBuy according to limitiations of other resources
+		for(let i=0; i<inputs.length; i++) {
+			inputsToBuy[i] = minCanProduce * inputProduceCosts[i];
+		}
+
+ 
+		// if(input1toBuy / input1produceCost > input2toBuy / input2produceCost) {
+			// input 2 is limiting
+			// let input1toBuy = input2toBuy / input2produceCost * input1produceCost;
+		// } else if(input1toBuy / input1produceCost < input2toBuy / input2produceCost) {
+			// input 1 limiting
+			// let input2toBuy = input1toBuy / input1produceCost * input2produceCost;
+		// }
+
+		// --------------------------------
+
+		for(let i=0; i<inputs.length; i++) {
+			inputsToBuy[i] = Math.min(inputsToBuy[i], 
+				(inputProduceCosts[i] * MAX_PRODUCE_BUY) - inputsPurchased[i]);
+		}
+
 		// limit amount to buy to max we should buy minus amount we already purchased
-		input1toBuy = Math.min(input1toBuy, 
-			(input1produceCost * MAX_PRODUCE_BUY) - input1purchased);
-		input2toBuy = Math.min(input2toBuy, 
-			(input2produceCost * MAX_PRODUCE_BUY) - input2purchased);
+		// input1toBuy = Math.min(input1toBuy, 
+		// 	(input1produceCost * MAX_PRODUCE_BUY) - input1purchased);
+		// input2toBuy = Math.min(input2toBuy, 
+		// 	(input2produceCost * MAX_PRODUCE_BUY) - input2purchased);
 
+		// --------------------------------
+
+		for(let i=0; i<inputs.length; i++) {
+			doTrade(sellers[i], firm, inputs[i], inputsToBuy[i]);
+		}
 
 		// complete transaction
 		// seller, buyer, resource, amount
-		doTrade(seller1, firm, input1, input1toBuy);
-		doTrade(seller2, firm, input2, input2toBuy);
+		// doTrade(seller1, firm, input1, input1toBuy);
+		// doTrade(seller2, firm, input2, input2toBuy);
+
+
+		for(let i=0; i<inputs.length; i++) {
+			purchaseCosts[inputs[i] ][0][AVAILABLE] -= inputsToBuy[i];
+		}
 
 		// don't need an index, instead just remove the empty elements
 		// until we either don't want to buy or we ran out of elements
 		// updates the object for next firm
-		purchaseCosts[input1][0][AVAILABLE] -= input1toBuy;
-		purchaseCosts[input2][0][AVAILABLE] -= input2toBuy;
+		// purchaseCosts[input1][0][AVAILABLE] -= input1toBuy;
+		// purchaseCosts[input2][0][AVAILABLE] -= input2toBuy;
+
+		// --------------------------------
 
 		let toBreak = true;
-		if(purchaseCosts[input1][0][AVAILABLE]==0) {
-			purchaseCosts[input1].splice(0,1); // remove first elm
-			toBreak = false;
+		for(let i=0; i<inputs.length; i++) {
+			if(purchaseCosts[inputs[i] ][0][AVAILABLE]==0) {
+				purchaseCosts[inputs[i] ].splice(0,1); // remove first elm
+				toBreak = false;
+				// note: don't break out of this for loop
+				// need to keep updating purcahseCosts, removing empty elements
+			}
 		}
-		if(purchaseCosts[input2][0][AVAILABLE]==0) {
-			purchaseCosts[input2].splice(0,1); // remove first elm
-			toBreak = false;
-		}
+
+
+		// let toBreak = true;
+		// if(purchaseCosts[input1][0][AVAILABLE]==0) {
+		// 	purchaseCosts[input1].splice(0,1); // remove first elm
+		// 	toBreak = false;
+		// }
+		// if(purchaseCosts[input2][0][AVAILABLE]==0) {
+		// 	purchaseCosts[input2].splice(0,1); // remove first elm
+		// 	toBreak = false;
+		// }
 
 		if(toBreak) {
 			break;
 		}
 
-		// new code below
-		input1purchased += input1toBuy;
-		input2purchased += input2toBuy;
 
-		// new code below
-		if(input1purchased >= input1produceCost * MAX_PRODUCE_BUY) {
-			// console.log('get fucked');
+		toBreak = false;
+		for(let i=0; i<inputs.length; i++) {
+			inputsPurchased[i] += inputsToBuy[i];
+			if(inputsPurchased[i] >= inputProduceCosts[i] * MAX_PRODUCE_BUY) {
+				toBreak = true;
+			}
+		}
+		if(toBreak) {
 			break;
 		}
-		if(input2purchased >= input2produceCost * MAX_PRODUCE_BUY) {
-			// console.log('get fucked');
-			break;
-		}
+
+		// input1purchased += input1toBuy;
+		// input2purchased += input2toBuy;
+
+		// if(input1purchased >= input1produceCost * MAX_PRODUCE_BUY) {
+		// 	break;
+		// }
+		// if(input2purchased >= input2produceCost * MAX_PRODUCE_BUY) {
+		// 	break;
+		// }
 
 	} // end while
 

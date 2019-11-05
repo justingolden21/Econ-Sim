@@ -129,8 +129,8 @@ function doBuy(firm, purchaseCosts) {
 
 	while(input1purchaseCosts.length > 0 && input2purchaseCosts.length > 0) {
 
-		input1cost = input1purchaseCosts[0][PRICE];
-		input2cost = input2purchaseCosts[0][PRICE];
+		let input1cost = input1purchaseCosts[0][PRICE];
+		let input2cost = input2purchaseCosts[0][PRICE];
 
 		let input1available = input1purchaseCosts[0][AVAILABLE];
 		let input2available = input2purchaseCosts[0][AVAILABLE];
@@ -164,10 +164,10 @@ function doBuy(firm, purchaseCosts) {
 		input1toBuy = Math.min(input1toBuy, input1available);
 		input2toBuy = Math.min(input2toBuy, input2available);
 
-		if(input1toBuy * input1produceCost > input2toBuy * input2produceCost) {
+		if(input1toBuy / input1produceCost > input2toBuy / input2produceCost) {
 			// input 2 is limiting
 			let input1toBuy = input2toBuy / input2produceCost * input1produceCost;
-		} else if(input1toBuy * input1produceCost < input2toBuy * input2produceCost) {
+		} else if(input1toBuy / input1produceCost < input2toBuy / input2produceCost) {
 			// input 1 limiting
 			let input2toBuy = input1toBuy / input1produceCost * input2produceCost;
 		}
