@@ -5,6 +5,8 @@ function display(firms) {
 	let firmsTryingToExpand = 0;
 
 	for(firm in firms) {
+		if(!firms[firm]) continue;
+
 		tmpHTML += '<div class="col-sm-6 col-md-4">'
 		tmpHTML += 'Firm #' + firms[firm].firmNum + ' - ' + firms[firm].type() + ':<br>';
 		tmpHTML += 'Bankrupt: ' + firms[firm].bankrupt + '<hr>Inventory:<br>';
@@ -61,6 +63,8 @@ function display(firms) {
 	let firmTypes = {};
 	tmpHTML = '';
 	for(firm in firms) {
+		if(!firms[firm]) continue;
+		
 		let inv = firms[firm].inventory;
 		for(item in inv) {
 			if(!totalInventory[item])

@@ -40,6 +40,7 @@ class Firm {
 		this.efficiency = normal01();
 
 		this.ticks = 0;
+		this.upkeepOffset = random(0, 20);
 		this.bankrupt = false;
 
 		this.prevAmountProduced = 0;
@@ -54,7 +55,7 @@ class Firm {
 		this.prevAmountSold = 0;
 		this.ticks++;
 
-		if(this.ticks % this.upkeepInterval == 0) {
+		if( (this.ticks + this.upkeepOffset) % this.upkeepInterval == 0) {
 			this.payUpkeep();
 		}
 
@@ -79,7 +80,7 @@ class Firm {
 			this.payAll(this.upkeepCost);
 		}
 		else {
-			// this.bankrupt = true;
+			this.bankrupt = true;
 		}
 	}
 	doProduction() {
@@ -196,7 +197,8 @@ function start() {
 }
 
 // const MAX_FIRMS = 300;
-const MAX_FIRMS_PER_TYPE = 20;
+const MAX_FIRMS_PER_TYPE = 100;
+const MAX_FORESTERS = 10;
 
 // can be called with firm type, if not random firm type
 function newFirm(firmType, sellPrice=10) {
@@ -206,7 +208,8 @@ function newFirm(firmType, sellPrice=10) {
 	if(!firmType)
 		firmType = 'mine smith forester farm mill baker refinery mint'.split(' ')[random(0,7)];
 
-	if(getFirmCount(firmType)>=MAX_FIRMS_PER_TYPE && firmType == 'forester')
+	if(getFirmCount('forester')>=MAX_FORESTERS && firmType == 'forester') // bobby's stupid logic for experiments
+	// if(getFirmCount(firmType)>=MAX_FIRMS_PER_TYPE)
 		return false;
 
 	if(firmType == 'forester')
@@ -241,10 +244,17 @@ function tick(overridePause=false) {
 		if(AIs[i])
 			AIs[i].tick();
 	}
+
+	for(let i=0; i<AIs.length; i++) {
+		if(AIs[i] && AIs[i].bankrupt)
+			AIs[i] = undefined;
+	}
+
 	if(ticks % TRADE_INTERVAL == 0) {
 		prevActivity = activity;
 		activity = 0;
-		doTrades(AIs.filter(AI => AI.bankrupt==false) );
+		// doTrades(AIs.filter(AI => AI && !AI.bankrupt) );
+		doTrades(AIs.filter(AI => AI!=undefined) );
 		for(let i=0; i<AIs.length; i++) {
 			if(AIs[i])
 				AIs[i].adjust();
@@ -290,7 +300,7 @@ function print(str) {
 function getFirmCount(type) {
 	let count = 0;
 	for(firm in AIs) {
-		if(AIs[firm].type()==type)
+		if(AIs[firm] && AIs[firm].type()==type)
 			count++;
 	}
 	return count;
