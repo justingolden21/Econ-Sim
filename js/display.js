@@ -9,7 +9,7 @@ function display(firms) {
 
 		tmpHTML += '<div class="col-sm-6 col-md-4">'
 		tmpHTML += 'Firm #' + firms[firm].firmNum + ' &mdash; ' + capitalize(firms[firm].type() ) + ':<br>';
-		tmpHTML += 'Bankrupt: ' + formatBool(firms[firm].bankrupt) + '<hr><b>Inventorys</b><br>';
+		tmpHTML += 'Bankrupt: ' + formatBool(firms[firm].bankrupt) + '<hr><b>Inventory</b><br>';
 		for(item in firms[firm].inventory) {
 			tmpHTML += getSprite(item) + capitalize(item) + ': ' + firms[firm].inventory[item] + 
 			'<div class="progressbar" style="width:' + Math.min(firms[firm].inventory[item]/10,200) + 'px;"></div>';
@@ -48,6 +48,7 @@ function display(firms) {
 
 	tmpHTML = 'Prices: ';
 	for(resource in avgPrices) {
+		if(resource == 'money') continue;
 		avgPrices[resource].price = round(avgPrices[resource].sum / avgPrices[resource].count);
 		tmpHTML += getSprite(resource) + capitalize(resource) + ' : ' + avgPrices[resource].price + ' | ';
 	}
