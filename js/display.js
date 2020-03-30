@@ -8,7 +8,7 @@ function display(firms) {
 		if(!firms[firm]) continue;
 
 		tmpHTML += '<div class="col-sm-6 col-md-4">'
-		tmpHTML += 'Firm #' + firms[firm].firmNum + ' &mdash; ' + capitalize(firms[firm].type() ) + ':<br>';
+		tmpHTML += 'Firm #' + firms[firm].firmNum + ' &mdash; ' + getSprite(firms[firm].type(), 'md') + capitalize(firms[firm].type() ) + ':<br>';
 		tmpHTML += 'Bankrupt: ' + formatBool(firms[firm].bankrupt) + '<hr><b>Inventory</b><br>';
 		for(item in firms[firm].inventory) {
 			tmpHTML += getSprite(item) + capitalize(item) + ': ' + firms[firm].inventory[item] + 

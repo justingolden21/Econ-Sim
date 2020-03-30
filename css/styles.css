@@ -20,6 +20,10 @@ hr {
 	width: 24px;
 	margin-right: 2px;
 }
+.icon-md {
+	width: 48px;
+	margin: 4px;
+}
 
 /*.custom-control.custom-switch input[type=checkbox]::before,
 .custom-control.custom-switch input[type=checkbox]::after {

@@ -18,6 +18,6 @@ const icons = {
 	'mint'	  : 'SGI_144'
 };
 
-function getSprite(name) {
-	return '<img class="icon-sm" src="img/icons/' + icons[name] + '.png">';
+function getSprite(name, size='sm') {
+	return '<img class="icon-' + size + '" src="img/icons/' + icons[name] + '.png">';
 }
