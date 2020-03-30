@@ -2,23 +2,28 @@
 window.onload = ()=> {
 	start();
 	// window.setInterval(tick, 100);
-	window.setInterval(tick, 500);
-	document.getElementById('pause-btn').onclick = ()=> {
+	// window.setInterval(tick, 500);
+	window.setInterval(tick, 1000);
+	$('#pause-btn').click( ()=> {
 		paused = !paused;
-	};
-	document.getElementById('tick-btn').onclick = ()=> {
+		if(paused)
+			$('#pause-btn').html('Resume <i class="fas fa-play"></i>');
+		else
+			$('#pause-btn').html('Pause <i class="fas fa-pause"></i>');
+	});
+	$('#tick-btn').click( ()=> {
 		tick(true);
-	};
+	});
 }
 
 let paused = false;
 // let paused = true;
 document.onkeydown = (evt)=> {
 	evt = evt || window.event;
-	if(evt.keyCode == 27) {
-		paused = !paused;
+	if(evt.keyCode == 27) { // esc
+		$('#pause-btn').click();
 	}
-	if(evt.keyCode == 84) {
+	if(evt.keyCode == 84) { // t
 		tick(true);
 	}
 };
@@ -187,13 +192,14 @@ class Firm {
 // make all the firms :)
 let AIs = [];
 let currentFirmNum = 0;
-let startFirms = 100;
+const startFirms = 100;
+// const startFirms = 50;
 function start() {
 	for(let i=0; i<startFirms; i++) {
 		newFirm();
 	}
 	display(AIs);
-	setupPlayer();
+	// setupPlayer();
 }
 
 // const MAX_FIRMS = 300;
@@ -246,8 +252,10 @@ function tick(overridePause=false) {
 	}
 
 	for(let i=0; i<AIs.length; i++) {
-		if(AIs[i] && AIs[i].bankrupt)
+		if(AIs[i] && AIs[i].bankrupt) {
+			console.log('removed bankrupt AI of type', AIs[i].type() );
 			AIs[i] = undefined;
+		}
 	}
 
 	if(ticks % TRADE_INTERVAL == 0) {

@@ -8,10 +8,10 @@ function display(firms) {
 		if(!firms[firm]) continue;
 
 		tmpHTML += '<div class="col-sm-6 col-md-4">'
-		tmpHTML += 'Firm #' + firms[firm].firmNum + ' - ' + firms[firm].type() + ':<br>';
-		tmpHTML += 'Bankrupt: ' + firms[firm].bankrupt + '<hr>Inventory:<br>';
+		tmpHTML += 'Firm #' + firms[firm].firmNum + ' &mdash; ' + capitalize(firms[firm].type() ) + ':<br>';
+		tmpHTML += 'Bankrupt: ' + formatBool(firms[firm].bankrupt) + '<hr><b>Inventorys</b><br>';
 		for(item in firms[firm].inventory) {
-			tmpHTML += item + ': ' + firms[firm].inventory[item] + 
+			tmpHTML += getSprite(item) + capitalize(item) + ': ' + firms[firm].inventory[item] + 
 			'<div class="progressbar" style="width:' + Math.min(firms[firm].inventory[item]/10,200) + 'px;"></div>';
 		}
 		// tmpHTML += '<hr>Reserve:<br>';
@@ -25,7 +25,7 @@ function display(firms) {
 			firmsTryingToExpand++;
 		}
 		tmpHTML += '<hr>Efficiency: ' + round(firms[firm].efficiency);
-		tmpHTML += '<br>Trying to Expand: ' + tryingToExpand;
+		tmpHTML += '<br>Trying to Expand: ' + formatBool(tryingToExpand);
 		tmpHTML += '<br>Times Expanded: ' + firms[firm].timesExpanded;
 		tmpHTML += '<hr>Sell Price: ' + firms[firm].sell[Object.keys(firms[firm].sell)[0] ];
 		tmpHTML += '<br>For Sale: ' + firms[firm].forSale;
@@ -48,9 +48,11 @@ function display(firms) {
 
 	tmpHTML = 'Prices: ';
 	for(resource in avgPrices) {
-		tmpHTML += resource + ' : ' + round(avgPrices[resource].sum / avgPrices[resource].count) + ' | ';
+		avgPrices[resource].price = round(avgPrices[resource].sum / avgPrices[resource].count);
+		tmpHTML += getSprite(resource) + capitalize(resource) + ' : ' + avgPrices[resource].price + ' | ';
 	}
 	document.getElementById('prices').innerHTML = tmpHTML;
+	drawChart(avgPrices);
 
 	document.getElementById('ticks').innerHTML = ticks;
 	document.getElementById('firms').innerHTML = AIs.length;
@@ -77,18 +79,18 @@ function display(firms) {
 	}
 	let totalResources = 0;
 	for(item in totalInventory) {
-		tmpHTML += item + ': ' + totalInventory[item] + ' | ';
+		tmpHTML += getSprite(item) + capitalize(item) + ': ' + totalInventory[item] + ' | ';
 		totalResources += totalInventory[item];
 	}
 	tmpHTML += 'Total: ' + totalResources;
 	document.getElementById('total-resources').innerHTML = tmpHTML;
 	tmpHTML = '';
 	for(type in firmTypes) {
-		tmpHTML += type + ': ' + firmTypes[type] + ' | ';
+		tmpHTML += getSprite(type) + capitalize(type) + ': ' + firmTypes[type] + ' | ';
 	}
 	document.getElementById('firm-types').innerHTML = tmpHTML;
 
-	displayPlayer();
+	// displayPlayer();
 }
 
 function displayPlayer() {
@@ -105,4 +107,19 @@ function displayPlayer() {
 
 function round(num, places=3) {
 	return Number( (num).toFixed(places) );
+}
+
+function capitalizeEach(str) {
+	let rtn = '';
+	str = str.split(' ');
+	for(let i=0; i<str.length; i++)
+		rtn += capitalize(str[i]) + ' ';
+	return rtn.slice(0,-1);
+}
+function capitalize(str) {
+	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function formatBool(bool) {
+	return bool ? 'Yes' : 'No';
 }

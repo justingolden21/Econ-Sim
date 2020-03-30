@@ -1,18 +1,24 @@
 .progressbar {
-	background-color: blue !important;
-	height: 5px !important;
+	background-color: #333;
+	height: 5px;
+	margin: 2px;
 }
 .col-sm-6 {
-	border: 1px solid black;
+	border: 1px solid #666;
+	border-radius: 10px;
 }
 .fa-arrow-up {
-	color: green;
+	color: #393;
 }
 .fa-arrow-down {
-	color: red;
+	color: #933;
 }
 hr {
-	border-color: black;
+	border-color: #ccc;
+}
+.icon-sm {
+	width: 24px;
+	margin-right: 2px;
 }
 
 /*.custom-control.custom-switch input[type=checkbox]::before,

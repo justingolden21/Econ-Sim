@@ -9,14 +9,17 @@ let inventory = {
 	'tools' : 0
 };
 
+// SGI_46
+// SGI_177
+
 const icons = {
 	'money' : 'SGI_59',
-	'bread' : 'SGI_158',
+	'bread' : 'SGI_164',
 	'ore'   : 'SGI_65',
 	'lumber': 'SGI_122',
 	'metal' : 'SGI_84',
 	'wheat' : 'SGI_62',
-	'flour' : 'SGI_177',
+	'flour' : 'SGI_158',
 	'tools' : 'SGI_24',
 
 	'mine'	  : 'SGI_89',
