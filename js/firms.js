@@ -97,7 +97,7 @@ class Mill extends Firm {
 		this.variance = 25;
 
 		this.expandRequirement = {'wheat': 2400, 'tools': 10};
-		this.expandReady = {'money': 6000, 'bread': 200, 'wheat': 2400, 'lumber': 30};
+		this.expandReady = {'money': 6000, 'bread': 100, 'wheat': 2400, 'tools': 10, 'lumber': 30};
 		this.expandCost = {'money': 3000, 'wheat': 1200, 'bread': 120, 'tools': 15, 'lumber': 30};
 	}
 }
