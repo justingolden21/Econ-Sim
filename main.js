@@ -63,7 +63,6 @@ class Firm {
 //upkeepOffset does what? nothing really I think.
 		if( (this.ticks + this.upkeepOffset) % 14 == this.upkeepInterval) {
       console.log(this.str(this));
-      report(firm);
 			this.payUpkeep();
 		}
 
@@ -368,9 +367,4 @@ function printIneventory(firm) {
   for(resource in firm.inventory)
   console.log
   
-}
-
-function report(firm) {
-  
-  console.log(firm.type(firm));
 }
