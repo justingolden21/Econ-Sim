@@ -22,24 +22,30 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
 	<script src="js/main.js"></script>
 	<script src="js/firms.js"></script>
 	<script src="js/trade.js"></script>
 	<script src="js/display.js"></script>
 	<script src="js/buy.js"></script>
+	<script src="js/sprites.js"></script>
+	<script src="js/charts.js"></script>
+	<script src="js/chart-checkboxes.js"></script>
 	<!-- <script src="js/buy2.js"></script> -->
-	<script src="js/player.js"></script>
+	<!-- <script src="js/player.js"></script> -->
 </head>
 
 <body class="container">
 	<br>
 	<div class="text-center">
-		<h3>Econ Sim v.0.0.0</h3>
-		<button id="pause-btn" class="btn btn-dark">Pause</button>
-		<button id="tick-btn" class="btn btn-dark">Tick</button>
+		<h3>Econ Sim</h3>
+		<button id="pause-btn" class="btn btn-dark">Pause <i class="fas fa-pause"></i></button>
+		<button id="tick-btn" class="btn btn-dark">Tick <i class="fas fa-arrow-right"></i></button>
 		<br><br>
 		<p><kbd>Esc</kbd> for pause, <kbd>T</kbd> for tick.</p>
+		<hr>
 		<p>
 			Tick:
 			<span id="ticks"></span>
@@ -50,12 +56,16 @@
 			| Trying to Expand:
 			<span id="expand"></span>
 		</p>
+
+		<div id="chart-checkbox-div"></div>
+		<div id="linechart"></div>
+
 		<p id="total-resources"></p>
 		<p id="firm-types"></p>
 		<p id="prices"></p>
 	</div>
 
-	<p>Player:</p>
+	<!-- <p>Player:</p>
 	<div id="player-display"></div>
 	<div id="player-inputs">
 		<table>
@@ -81,7 +91,7 @@
 			</tr>
 		</table>
 
-	</div>
+	</div> -->
 
 	<div id="display" class="row"></div>
 	<br>
