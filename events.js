@@ -9,50 +9,49 @@ function findEvent() {
 
 function eventAffect(firm) {
   
-  console.log("1");
 }
 
 // inventory numbers are plus or minus in percentage yielded
 const SEASONS = {
 	'winter': {
-		'money' : 0,
-		'bread' : 0,
-		'ore'   : 0,
-		'lumber': 0,
-		'metal' : 0,
+	   'money' : 1.1,
+		'bread' : 1,
+		'ore'   : 1.1,
+		'lumber': .9,
+		'metal' : 1.2,
 		'wheat' : -.5,
-		'flour' : 0,
-		'tools' : 0
+		'flour' : 1,
+		'tools' : 1
 	},
 	'spring': {
-		'money' : 0,
-		'bread' : 0,
-		'ore'   : 0,
-		'lumber': 0,
-		'metal' : 0,
-		'wheat' : 0,
-		'flour' : 0,
-		'tools' : 0
+		'money' : 1,
+		'bread' : 1,
+		'ore'   : 1,
+		'lumber': 1.2,
+		'metal' : 1,
+		'wheat' : 1,
+		'flour' : 1,
+		'tools' : 1
 	},
 	'summer': {
-		'money' : 0,
-		'bread' : 0,
-		'ore'   : 0,
-		'lumber': 0,
-		'metal' : 0,
-		'wheat' : 0,
-		'flour' : 0,
-		'tools' : 0
+		'money' : .9,
+		'bread' : 1,
+		'ore'   : .8,
+		'lumber': 1.1,
+		'metal' : 1,
+		'wheat' : 2,
+		'flour' : 1,
+		'tools' : 1
 	},
 	'fall': {
-		'money' : 0,
-		'bread' : 0,
-		'ore'   : 0,
-		'lumber': 0,
-		'metal' : 0,
-		'wheat' : 0,
-		'flour' : 0,
-		'tools' : 0
+		'money' : 1,
+		'bread' : 1,
+		'ore'   : 1.1,
+		'lumber': 1,
+		'metal' : 1.1,
+		'wheat' : 1,
+		'flour' : 1,
+		'tools' : 1.1
 	}
 };
 

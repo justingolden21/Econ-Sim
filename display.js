@@ -6,6 +6,7 @@ function display(firms) {
 
 	for(firm in firms) {
 		if(!firms[firm]) continue;
+		if(firms[firm].bankrupt) continue;
 
 		tmpHTML += '<div class="col-sm-6 col-md-4">'
 		tmpHTML += 'Firm #' + firms[firm].firmNum + ' &mdash; ' + capitalize(firms[firm].type() ) + ':<br>';
@@ -56,7 +57,7 @@ function display(firms) {
 	drawChart(avgPrices);
 
 	document.getElementById('ticks').innerHTML = ticks;
-	document.getElementById('firms').innerHTML = AIs.length;
+	document.getElementById('firms').innerHTML = AIs.length -numBankrupt; //will break if we start recycling values, which we should do
 	document.getElementById('activity').innerHTML = activity +
 		' <i class="fas fa-arrow-' + (activity > prevActivity ? 'up' : 'down') + '"></i>';
 	document.getElementById('expand').innerHTML = firmsTryingToExpand + ' / ' + AIs.length;
