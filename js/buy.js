@@ -13,6 +13,8 @@ could lose it if it's:
 3. used in upkeep cost
 */
 
+// test comment
+
 function buyResources(firm, purchaseCosts, resources, message) {
 	// if(message=='expand') {
 	// 	console.log(firm.type() );
